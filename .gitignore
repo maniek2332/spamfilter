@@ -1,3 +1,12 @@
 /cache/
 .*.swp
 *.pyc
+/mail_db/easy_ham/
+/mail_db/hard_ham/
+/mail_db/spam/
+/mail_db/all_ham.txt
+/mail_db/all_spam.txt
+/mail_db/test_ham.txt
+/mail_db/test_spam.txt
+/mail_db/train_ham.txt
+/mail_db/train_spam.txt
