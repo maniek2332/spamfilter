@@ -151,15 +151,14 @@ class MessageParser(object):
     def _parse_headers(self):
         lines = self.head.split('\n')
 
-        if lines:
-            # Drop the "From..." line
-            while not RE_HEADER.match(lines[0]):
-                del lines[0]
-            while lines:
-                line = self._get_header_line(lines)
-                key, value = line.split(':', 1)
-                key, value = key.strip(), value.strip()
-                self.headers[key] = value
+        # Drop the "From..." line
+        while lines and not RE_HEADER.match(lines[0]):
+            del lines[0]
+        while lines:
+            line = self._get_header_line(lines)
+            key, value = line.split(':', 1)
+            key, value = key.strip(), value.strip()
+            self.headers[key] = value
 
     def _get_header_line(self, lines):
         line_parts = [lines.pop(0)]
