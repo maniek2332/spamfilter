@@ -13,7 +13,7 @@ from datasets import TRAIN_ALL
 
 
 class FeaturesExtractor(DataFrameMapper):
-    def __init__(self, subject_words=None, text_words=None):
+    def __init__(self, subject_words=10, text_words=100):
         self.subject_words = subject_words
         self.text_words = text_words
 
@@ -32,9 +32,6 @@ class FeaturesExtractor(DataFrameMapper):
         )
 
         super(FeaturesExtractor, self).__init__(self.mapping)
-
-        # cache function
-        self.transform = memory.cache(self.transform, ignore=('self',))
 
     # XXX bugfix of converting string columns
     def _get_col_subset(self, X, cols):
