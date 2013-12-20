@@ -13,7 +13,7 @@ from datasets import TRAIN_ALL
 
 
 class FeaturesExtractor(DataFrameMapper):
-    def __init__(self, subject_words=10, text_words=100):
+    def __init__(self, subject_words=500, text_words=3000):
         self.subject_words = subject_words
         self.text_words = text_words
 
