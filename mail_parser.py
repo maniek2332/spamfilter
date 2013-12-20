@@ -56,6 +56,12 @@ def parse_mails(files_list):
     return mails
 
 
+def parse_mail_string(content):
+    mp = MessageParser('<SINGLE>', content)
+    mails = pd.DataFrame([mp.as_series()])
+    return mails
+
+
 class StatsHTMLParser(HTMLParser):
     def reset(self):
         HTMLParser.reset(self)
