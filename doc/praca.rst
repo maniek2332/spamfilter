@@ -1,0 +1,451 @@
+##################################################################
+Implementacja filtra antyspamowego przy użyciu uczenia maszynowego
+##################################################################
+
+.. raw:: pdf
+
+    PageBreak
+
+.. contents:: Spis treści
+   :depth: 2
+
+.. sectnum::
+   :depth: 2
+
+.. raw:: pdf
+
+    PageBreak
+
+
+
+Wstęp
+=====
+
+.. note::
+
+  Kilka słów wstępu, krótkie opisanie problemu spamu
+
+Cel pracy
+---------
+
+.. note::
+
+  O heroicznej walce ze spamem
+
+Celem pracy jest stworzenie systemu antyspamowego. Zadaniem systemu
+jest:
+
+#. Poprawne wczytanie i przetworzenie dowolnej wiadomości e-mail.
+#. Nauka klasyfikacji spamu na podstawie danych testowych.
+#. Udostępnienie interfejsu pozwalącego zewnętrznym aplikacją na
+   sklasyfikowanie e-maili.
+
+Przy klasyfikacji system skupiać się będzie przede wszystkim na treści
+wiadomości. Informacje takie jak adres nadawcy lub adres serwera
+z którega wiadomość nadeszła nie będą brane pod uwagę.
+
+Uczenie maszynowe
+-----------------
+
+.. note::
+
+  Krótki opis oczenia maszynowego, jego zastosowań i możliwości
+
+Uczenie maszynową jest dziedziną sztucznej inteligencji. Polega ono
+na tworzeniu systemów, które na podstawie przykładów są w stanie uczyć
+się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia.
+
+Uczenie maszynowe ma szerokie zastosowanie w różnych aspektach
+życia, stosuje się je między innymi do:
+
+* rozpoznawania mowy i pisma,
+* automatycznego sterowania samochodami,
+* klasyfikacji obiektów astronomicznych,
+* wykonywania analiz rynkowych.
+
+Biblioteka scikit-learn
+-----------------------
+
+.. note::
+
+  Opis biblioteki z której zaczerpnięte będą implementacje alogrytmów
+
+Elementy projektu
+-----------------
+
+.. note::
+
+  Określenie elementów projektu
+
+Parser wiadomości e-mail
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Podstawową funkcją parsera jest poprawne wczytanie wiadomości
+e-mail, w tym celu musi on:
+
+ #. wczytać nagłówki wiadomości,
+ #. wczytać ciało wiadomości,
+ #. zdekodować ciało wiadomości na podstawie kodowania, i strony
+    kodowej znalezionych w nagłówku,
+ #. rozpoznać czy ciało wiadomości jest HTMLem i poprawnie go sparsować.
+
+Na parsowanie HTMLa składa się:
+
+ #. przetworzenie ciała do prostego tekstu (plaintext),
+ #. podsumowanie ilości i typów tagów użytych w wiadomości,
+ #. podliczenie ilości błędów drzewa w wiadomości.
+
+Sam parser ma postać modułu języka Python. Pozwala to na łatwe
+połączenie go z resztą pracy inżynierskiej. Po wczytaniu wiadomości
+możemy pobrać wszystkie zebrane informacje z wewnętrznej
+obiektowej struktury modułu.
+
+
+Przetwarzanie wiadomości
+========================
+
+Budowa wiadomości e-mail
+------------------------
+
+Surowa wiadomość e-mail składa się z dwóch części: nagłówków i
+ciała. Części te oddzielone są od siebie sekwencją znaków
+``<CR><LF><CR><LF>`` (CR - Carriage Return, LF - Line Feed).
+
+Część nagłówkowa składa z wielu nagłówków w formacie::
+
+    Nazwa nagłówka: Wartość nagłówka
+
+Jeden taki nagłówek może zajmować kilka linijek (każda kolejna
+linijka musi się rozpoczynać białymi znakami - spacje lub
+tabulacje). Wielkość znaków w nazwie nagłówka nie ma znaczenia.
+Przykładowy nagłówek::
+
+    Return-Path: <bduyisj36648@Email.cz>
+    Delivered-To: yyyy@netnoteinc.com
+    Received: from tugo (unknown [211.115.78.51]) by mail.netnoteinc.com
+        (Postfix) with ESMTP id F40CA1140BA; Fri,  6 Jul 2001 02:03:10 +0000
+        (Eire)
+    Received: from 127.0.0.1 ([202.72.66.134]) by tugo with Microsoft
+        SMTPSVC(5.0.2172.1); Fri, 6 Jul 2001 11:00:31 +0900
+    Message-Id: <Mp9U4NEPd9mpa.8zI7m9NaCf4dlKT-HBhxaL@127.0.0.1>
+    From: bduyisj36648@Email.cz <bduyisj36648@Email.cz>
+    Subject: Finally   collecct   your   judgment (71733)
+    Date: Wed, 16 Aug 2000 17:38:13 -0400 (EDT)
+    MIME-Version: 1.0
+    Content-Transfer-Encoding: 7bit
+    X-Originalarrivaltime: 06 Jul 2001 02:00:32.0843 (UTC) FILETIME=[708F81B0:
+        01C105BF]
+    To: undisclosed-recipients:;
+
+Ciało wiadomości to właściwa zawartość e-maila. Może być ono zapisane
+zarówno w języku znaczników jakim jest HTML, jak również jako
+zwykły tekst. Ponadto ciało zapisane jest w konkretnej stronie kodowej.
+Może również być dodatkowo zakodowane kodowaniem ``quoted-printable``.
+
+Ważne nagłówki
+--------------
+
+Content-Type
+~~~~~~~~~~~~
+
+Jedną z podstawowych informacji jaką zawiera ten nagłówek jest typ
+ciała wiadomości. Najczęściej wykorzystywane są tu:
+
+* ``text/plain`` - wiadomość zapisana prostym tekstem,
+* ``text/html`` - wiadomość zapisana z użyciem HTML.
+
+E-maile często jednak nie zawierają tych informacji lub celowo
+opisują je w sposób mylący. Z tego powodu parser nie polega na tej
+informacji i sam stara się wykryć czy wiadomość zawiera HTML,
+czy też nie.
+
+Spotyka się również maile wieloczęściowe, przykładowo kiedy w mailu
+zamieszczone są obrazki lub inne załączniki, albo kiedy mail
+posiada swoją wersję zarówno w HTMLu i prostym tekście.
+Wówczas ciało wiadomości podzielone jest na części ciągiem znaków
+zwanym ``boundary`` (granica). Wówczas każda z części posiada
+swoje własne nagłówki i ciało.
+
+Inną ważną informacją zawartą w tym nagłówku jest deklaracja strony
+kodowej w której zapisane zostało ciało. Na podstawie
+tej informacji parser dekoduje tekst wiadomości na swój
+wewnętrzny format.
+
+Przykładowe użycia nagłówka::
+
+    Content-Type: text/html;
+    Content-Type: text/html;	charset=iso-8859-1
+    Content-Type: text/html; charset="CHINESEBIG5"
+    Content-Type: text/html; charset="ISO-8859-1"
+    Content-Type: text/html; charset="US-ASCII"
+    Content-Type: text/html; charset="Windows-1251"
+    Content-Type: text/html; charset="euc-kr"
+    Content-Type: text/html; charset="gb2312"
+    Content-Type: text/html; charset="ks_c_5601-1987"
+    Content-Type: text/html; charset="us-ascii"
+    Content-Type: text/html;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; (...)
+    Content-Type: text/html;charset=ks_c_5601-1987
+    Content-Type: text/plain;
+    Content-Type: text/plain; Charset = "us-ascii"
+    Content-Type: text/plain; charset="DEFAULT"
+    Content-Type: text/plain; charset="DEFAULT_CHARSET"
+    Content-Type: text/plain; charset="GB2312"
+    Content-Type: multipart/alternative; boundary="----=_NextPart_000_81109_01C25FF9.832EE820"
+    Content-Type: multipart/mixed; boundary="=_NextPart_Caramail_0190361032516937_ID"
+
+Content-Transfer-Encoding
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Nagłówek ten opisuje jak zakodowane są dane w ciele wiadomości.
+W przypadku wiadomości e-mail spodziewamy się takich
+kodowań:
+
+* ``7bit`` - dane tekstowe zakodowane tylko na 7 bitach (ASCII).
+* ``8bit`` - dane tekstowe zakodowane na 8 bitach (inne strony kodowe).
+* ``quoted-printable`` - dane zakodowane kodowaniem ``quoted-printable``
+* ``base64`` - dane zakodowane za pomocą ``base64``
+
+Przykładowe nagłówki::
+
+    Content-Transfer-Encoding: 7BIT
+    Content-Transfer-Encoding: 8bit
+    Content-Transfer-Encoding: QUOTED-PRINTABLE
+    Content-Transfer-Encoding: base64
+
+Subject
+~~~~~~~
+
+W nagłówku tym zapisany jest temat wiadomości. Domyślnie nagłówek
+ten zawiera tylko znaki ASCII. Jednak tutaj podobnie
+jak w ciele wiadomości spotkać się możemy z różnymi stronami kodowymi i
+kodowaniami. Jeśli nagłówek jest dodatkowo zakodowany przyjmuje
+on postać::
+
+    =?strona_kodowa?kodowanie?zakodowany_temat?=
+
+* ``strona_kodowa`` to nazwa strony kodowej w jakiej zapisany jest temat,
+* ``kodowanie`` to litera ``Q`` lub ``B``, wskazuje to typ użytego kodowania,
+  ``Q`` to ``quoted-printable``, ``B`` to ``base64``,
+* ``zakodowany_temat`` to zakodowany temat wiadomości.
+
+W celu odczytania takiego tematu najpierw dekodujemy ``zakodowany_temat``
+używając właściwego kodowania, a na końcu odczytujemy go przy pomocy
+podanej strony kodowej.
+
+Przykładowe nagłówki::
+
+    Subject: Your eBay account is about to expire!
+    Subject: re: domain registration savings
+    Subject: Make a Fortune On eBay                         24772
+    Subject: Save $30k even if you've refi'd           1090
+    Subject: =?Big5?B?rEKq96SjrE5+fqdPtsykRn5+?=
+    Subject: =?GB2312?B?NTDUqrvxtcPSu9LazuXHp83yRU1BSUy12Na3tcS7+rvh?=
+    Subject: =?GB2312?B?0rvN+KGwu92hsczsz8KjrNK71bnM7M/C1qotLS0tMjAwM8TqNNTCMcjVLS00?=
+
+Widzimy tutaj, że w końcówkach niektórych tematów pojawiają się dodatkowe
+nieznaczące znaki. Jest to technika używana przez spamerów mająca
+na celu zmylenie prostych filtrów antyspamowych, które sprawdzają
+czy dana wiadomość jest spamem bądź na podstawie prostego porównania
+tematu wiadomości z zebraną wcześniej bazą spamu.
+
+
+Dekodowanie ciała wiadomości
+----------------------------
+
+W wiadomościach e-mail spotykamy się z dwoma różnorodnymi kodowaniami
+(nie liczymy tutaj kodowań podstawowych ``7bit`` i ``8bit``).
+Jedno z nich to ``quoted-printable``. Jest to stosunkowo proste kodowanie,
+które zapisuje bajty o większej od 127, bajty będące kodami sterującymi
+ASCII oraz znak ``=`` zapisując każdy z tych bajtów jako wartość
+szesnastkową poprzedzoną znakiem ``=``. Ponieważ zakodowane są tylko
+pojedyncze znaki kodowanie to jest proste do zdekodowania.
+
+Przykładowy fragment zapisany z użyciem ``quoted-printable``::
+
+    <html><body><center>
+
+    <table bgcolor=3D"663399" border=3D"2" width=3D"999" cellspacing=3D"0" cel=
+    lpadding=3D"0">
+      <tr>
+        <td colspan=3D"3" width=3D"999"> <hr><font color=3D"yellow"> 
+    <center>
+    <font size=3D"7"> 
+    <br><center><b>Get 12 FREE VHS or DVDs! </b><br>
+    <table bgcolor=3D"white" border=3D"2" width=3D"500">
+
+Drugim spotykanym kodowaniem jest ``base64``. Jest to inny rodzaj kodowania,
+koduje się za jego pomocą już nie pojedyncze znaki a cały blok danych.
+W niektórych wiadomościach zdarza się spotkać z sytuacją kiedy tylko
+początek ciała jest zakodowana jako ``base64``, natomiast reszta tekstu
+zapisana jest prostym tekstem. Z tego powodu do wyznaczenia
+części wiadomości która jest zakodowana wykorzystane zostało
+wyrażenie regularne, które dopasowywane jest do ciała::
+
+    RE_BASE64 = re.compile('(?:(?:[a-zA-Z0-9+/=]+)[\n]?)+')
+
+Tekst "Ala ma kota" zapisany w ``base64`` wygląda następująco::
+
+    QWxhIG1hIGtvdGE=
+
+Aby wiadomość mogła być prawidłowo wyświetlona musi zostać ona wczytana
+przy pomocy odpowiedniej strony kodowej. Strona kodowa jakiej potrzebujemy
+zadeklarowana jest w nagłówku ``Content-Type`` jako ``charset``.
+Przy przetwarzaniu tekstu może się zdarzyć sytuacja, że bajt który
+przetwarzamy nie został przewidziany w stronie kodowej. W takim przypadku
+bajt taki jest ignorowany.
+
+
+Przetwarzanie HTML
+------------------
+
+Jeśli ciało wiadomości zostanie rozpoznane jako HTML zostaje podjęta
+akcja parsowania go. Proste podejście do tego problemu (czyli zbudowanie
+drzewa tagów) nie jest tutaj skuteczne. Powodem tego jest ogromna liczba
+błędów występujących w mailach. Najczęściej spotykane to:
+
+* brak domknięć części otwartych tagów,
+* "zakleszczanie" tagów (np. ``<b><i>Tekst</b></i>``),
+* brak elementu ``<html>`` w dokumencie.
+
+Z tego powodu wykorzystany został parser który wczytuje kolejne
+otwarcia tagów, prosty tekst między nimi i zamknięcia tagów.
+Na podstawie napotkanych otwarć i zamknięć tworzy on stos tagów,
+ignoruje jednak przy tym wszelkie niewłaściwe domknięcia (zapisuje
+jednak ich ilość). Zwykły tekst pomiędzy tagami zostaje zapisany do bufora
+z prostym tekstem.
+
+Prócz ekstrakcji tekstu z dokumentu HTML powyższy parser zbiera również
+statystyki na temat pokrycia tekstu przez tagi (np. ile liter w dokumencie
+było obłożone tagami pogrubienia), oraz zlicza ilość błędów napotkanych
+przy przetwarzaniu struktury HTML.
+
+
+Wiadomości wieloczęściowe
+-------------------------
+
+Jak już wcześniej wspomniano niektóre wiadomości mają formę wieloczęściową.
+Takie e-maile rozpoznajemy po typie ``multipart/`` zawartym w nagłówku
+``Content-Type``. Wówczas nagłówek ten zawiera również wartość ``boundary``,
+która posłuży do podzielenia wiadomości. Przykładowo jeśli nasze ``boundary``
+przyjmuje wartość ``QWERTY`` to separatory jakich szukamy w dokumencie
+mają wartość ``--QWERTY``. Wyjątkiem jest tu ostatni separator,
+jego wartość to ``--QWERTY--``. Wszystkie informacje zawarte przed
+pierwszym i za ostatnim separatorem zostają zignorowane.
+
+Następnie wszystkie znalezione w ten sposób części wiadomości zostają
+ponownie sparsowane (traktowane są jako osobna wiadomość) a następnie
+ponownie zebrane w całość (teksty zostają połączone, a statystyki
+zsumowane).
+
+Może się również zdarzyć sytuacja, że część wiadomości również
+jest wiadomością wieloczęściową. Z tego powodu wykorzystane zostało
+rozwiązanie rekurencyjne, które łatwo radzi sobie z takim
+problemem.
+
+Przykładowa wiadomość wieloczęściowa z
+``boundary`` zadeklarowanym jako ``BoundaryOfDocument``::
+
+    This is a multi-part message in MIME format.
+
+    --BoundaryOfDocument
+    Content-Type: text/plain
+    Content-Transfer-Encoding: 7bit
+
+    FREE CD-ROM LESSONS
+    http://isis.webstakes.com/play/Isis?ID=89801
+
+    1. Choose from 15 titles
+    2. Learn new skills in 1 hour
+    3. Compare at $59.95
+    4. Quick, easy and FREE!
+
+    (...)
+
+    --BoundaryOfDocument
+    Content-Type: text/html
+    Content-Transfer-Encoding: 7bit
+
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;charset=iso-8859-1">
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+    <HTML><HEAD><TITLE>Untitled Document</TITLE>
+    <META content="text/html; charset=iso-8859-1" http-equiv=Content-Type>
+    </HEAD>
+    <BODY bgColor=#ffffff><CENTER>
+    <TABLE align=center border=0 cellPadding=0 cellSpacing=0 width=500>
+
+    (...)
+
+    --BoundaryOfDocument--
+
+Istotne cechy wiadomości
+------------------------
+
+.. note::
+
+  Zaproponowanie cech wiadomości które mogą być wykorzystane w uczeniu
+  maszynowym
+
+Przygotowanie danych wejściowych dla klasyfikatorów
+---------------------------------------------------
+
+.. note::
+
+  Określenie formatu w jakim dane zostaną przekazane klasyfikatorom,
+  ewentualne ich wcześniejsze przetworzenie (np. normalizacja)
+
+
+Algorytmy uczenia maszynowego
+=============================
+
+.. note::
+
+  Krótki wstęp teoretyczny do poszczególnych algorytmów, następnie opis
+  uczenia tych algorytmów, doboru ich parametrów itp.
+
+Sieci neuronowe
+---------------
+
+Regresja logistyczna
+--------------------
+
+Naiwny klasyfikator bayesowski
+------------------------------
+
+Maszyna wsparcia wektorowego
+----------------------------
+
+.. note::
+
+  Wykorzystane algorytmy mogą ulec zmianie
+
+
+Porównanie efektywności klasyfikatorów
+======================================
+
+.. note::
+
+  Obliczenie efektywności algorytmów, z uwzględnieniem użytych parametrów,
+  wykresy, wykresy, wykresy...
+
+
+Integracja z programem pocztowym
+================================
+
+.. note::
+
+  Opis mechanizmów programu pocztowego (prawdopodobnie Claws Mail), które
+  umożliwiają stworzenie pluginu, pokazanie jak program został zintegrowany z
+  filtrem.
+
+
+Podsumowanie i wnioski
+======================
+
+.. note::
+
+  Który algorytm okazał się najlepszy, dlaczego tak a nie inaczej, co można
+  poprawić/ulepszyć/przemyśleć
+
+Bibliografia
+============
+
