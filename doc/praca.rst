@@ -28,28 +28,20 @@ Wstęp
 Cel pracy
 ---------
 
-.. note::
-
-  O heroicznej walce ze spamem
-
 Celem pracy jest stworzenie systemu antyspamowego. Zadaniem systemu
 jest:
 
 #. Poprawne wczytanie i przetworzenie dowolnej wiadomości e-mail.
 #. Nauka klasyfikacji spamu na podstawie danych testowych.
-#. Udostępnienie interfejsu pozwalącego zewnętrznym aplikacją na
+#. Udostępnienie interfejsu pozwalającego zewnętrznym aplikacją na
    sklasyfikowanie e-maili.
 
 Przy klasyfikacji system skupiać się będzie przede wszystkim na treści
 wiadomości. Informacje takie jak adres nadawcy lub adres serwera
-z którega wiadomość nadeszła nie będą brane pod uwagę.
+z którego wiadomość nadeszła nie będą brane pod uwagę.
 
 Uczenie maszynowe
 -----------------
-
-.. note::
-
-  Krótki opis oczenia maszynowego, jego zastosowań i możliwości
 
 Uczenie maszynową jest dziedziną sztucznej inteligencji. Polega ono
 na tworzeniu systemów, które na podstawie przykładów są w stanie uczyć
@@ -73,9 +65,8 @@ Biblioteka scikit-learn
 Elementy projektu
 -----------------
 
-.. note::
-
-  Określenie elementów projektu
+W filtrze antyspamowym będącym tematem tej pracy możemy wyszczególnić
+poszczególne elementy:
 
 Parser wiadomości e-mail
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,23 +74,57 @@ Parser wiadomości e-mail
 Podstawową funkcją parsera jest poprawne wczytanie wiadomości
 e-mail, w tym celu musi on:
 
- #. wczytać nagłówki wiadomości,
- #. wczytać ciało wiadomości,
- #. zdekodować ciało wiadomości na podstawie kodowania, i strony
-    kodowej znalezionych w nagłówku,
- #. rozpoznać czy ciało wiadomości jest HTMLem i poprawnie go sparsować.
+#. wczytać nagłówki wiadomości,
+#. wczytać ciało wiadomości,
+#. zdekodować ciało wiadomości na podstawie kodowania, i strony
+   kodowej znalezionych w nagłówku,
+#. rozpoznać czy ciało wiadomości jest HTMLem i poprawnie go sparsować.
 
 Na parsowanie HTMLa składa się:
 
- #. przetworzenie ciała do prostego tekstu (plaintext),
- #. podsumowanie ilości i typów tagów użytych w wiadomości,
- #. podliczenie ilości błędów drzewa w wiadomości.
+#. przetworzenie ciała do prostego tekstu (plaintext),
+#. podsumowanie ilości i typów tagów użytych w wiadomości,
+#. podliczenie ilości błędów drzewa w wiadomości.
 
 Sam parser ma postać modułu języka Python. Pozwala to na łatwe
 połączenie go z resztą pracy inżynierskiej. Po wczytaniu wiadomości
 możemy pobrać wszystkie zebrane informacje z wewnętrznej
 obiektowej struktury modułu.
 
+Ekstraktor cech
+~~~~~~~~~~~~~~~
+
+Po wczytaniu wiadomości należy przedstawić zawarte w niej informacje
+w formie numerycznej. Esktraktor zajmuje się takimi zadaniami jak:
+
+#. Zliczenie wystąpień słów w temacie wiadomości
+#. Zliczenie wystąpień słów w ciele wiadomości
+#. Zliczenie wystąpień linków i adresów w ciele wiadomości
+
+Klasyfikator
+~~~~~~~~~~~~
+
+Jest to moduł odpowiedzialny za utworzenie modelu klasyfikatora wiadomości.
+Znajdują się tutaj funkcje odpowiedzialne za trening oraz
+testowanie modelu, a także wykonujące pomiar wydajności poszczególnych
+algorytmów
+
+Serwer HTTP
+~~~~~~~~~~~
+
+Zadaniem serwera jest:
+
+#. nasłuchiwanie żądań HTTP z wiadomościami nadsyłanych przez programy
+   pocztowe,
+#. sprawdzenie w klasyfikatorze nadesłanej wiadomości,
+#. odesłanie odpowiedzi zgodnej z przewidywaniami klasyfikatora.
+
+Wtyczka do programu pocztowego
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Jest to prosty skrypt który pozwala programowi pocztowemu
+``Claws-Mail`` na wysłanie wybranych wiadomości do klasyfikatora
+(poprzez protokół HTTP).
 
 Przetwarzanie wiadomości
 ========================
@@ -402,17 +427,47 @@ Algorytmy uczenia maszynowego
   Krótki wstęp teoretyczny do poszczególnych algorytmów, następnie opis
   uczenia tych algorytmów, doboru ich parametrów itp.
 
-Sieci neuronowe
----------------
-
 Regresja logistyczna
 --------------------
+
+Regresja logistyczna jest modelem liniowym klasyfikacji danych.
+Dzięki wykorzystaniu funkcji logistycznej wartość przewidywana przez
+ten model zawiera się w przedziale :math:`0 \leq p \leq 1`.
+
+Krzywa ROC dla regresji logistycznej o domyślnych parametrach:
+
+.. figure:: charts/ROC_LogisticRegression.png
+   :width: 100%
+
+   Krzywa ROC
+
+.. admonition:: TODO
+
+   * Wpływ parametrów na efektywność klasyfikatora
 
 Naiwny klasyfikator bayesowski
 ------------------------------
 
+.. figure:: charts/ROC_MultinomialNB.png
+   :width: 100%
+
+   Krzywa ROC
+
 Maszyna wsparcia wektorowego
 ----------------------------
+
+.. figure:: charts/ROC_SVC.png
+   :width: 100%
+
+   Krzywa ROC
+
+Las drzew losowych
+------------------
+
+.. figure:: charts/ROC_RandomForestClassifier.png
+   :width: 100%
+
+   Krzywa ROC
 
 .. note::
 
@@ -427,6 +482,12 @@ Porównanie efektywności klasyfikatorów
   Obliczenie efektywności algorytmów, z uwzględnieniem użytych parametrów,
   wykresy, wykresy, wykresy...
 
+Przykład:
+
+.. figure:: charts/ROC_ALL.png
+   :width: 100%
+
+   Krzywa ROC
 
 Integracja z programem pocztowym
 ================================
