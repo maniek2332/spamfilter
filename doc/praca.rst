@@ -129,6 +129,43 @@ Jest to prosty skrypt który pozwala programowi pocztowemu
 Przetwarzanie wiadomości
 ========================
 
+Korpus wiadomości
+-----------------
+
+.. note::
+   Informacje na temat korpusu SpamAssasin z którego korzystam
+
+.. admonition:: TODO
+
+   * Szczegółowe informacje na temat kategorii w korpusie
+
+.. table:: Liczba wiadomości w korpusie
+
+    ============= =================
+    Kategoria     Liczba wiadomości
+    ============= =================
+    Easy Ham      2551
+    Hard Ham      250
+    Spam          500
+    **Suma**      **3301**
+    ============= =================
+
+Podział korpusu na treningowy i testowy
+---------------------------------------
+
+W celu uzyskania miarodajnych wyników podczas testowania algorytmów
+uczenia maszynowego wszystkie pomiary wydajności należy wykonywać
+na innym zestawie danych niż te użyte do treningu. W tym celu korpus
+wiadomości został podzielony na zestaw treningowy i zestaw testowy
+według poniższych reguł:
+
+* dla każdej kategorii zostało wybranych 20% wiadomości i umieszczono
+  je w korpusie testowym
+* pozostałe 80% wiadomości znalazło się w korpusie treningowym
+
+Podział ten został dokonany tylko raz i jest niezmienny we
+wszystkich pomiarach w dalszej części pracy.
+
 Budowa wiadomości e-mail
 ------------------------
 
@@ -437,7 +474,8 @@ ten model zawiera się w przedziale :math:`0 \leq p \leq 1`.
 Krzywa ROC dla regresji logistycznej o domyślnych parametrach:
 
 .. figure:: charts/ROC_LogisticRegression.png
-   :width: 100%
+   :width: 70%
+   :align: center
 
    Krzywa ROC
 
@@ -449,7 +487,8 @@ Naiwny klasyfikator bayesowski
 ------------------------------
 
 .. figure:: charts/ROC_MultinomialNB.png
-   :width: 100%
+   :width: 70%
+   :align: center
 
    Krzywa ROC
 
@@ -457,7 +496,8 @@ Maszyna wsparcia wektorowego
 ----------------------------
 
 .. figure:: charts/ROC_SVC.png
-   :width: 100%
+   :width: 70%
+   :align: center
 
    Krzywa ROC
 
@@ -465,7 +505,8 @@ Las drzew losowych
 ------------------
 
 .. figure:: charts/ROC_RandomForestClassifier.png
-   :width: 100%
+   :width: 70%
+   :align: center
 
    Krzywa ROC
 
@@ -485,7 +526,8 @@ Porównanie efektywności klasyfikatorów
 Przykład:
 
 .. figure:: charts/ROC_ALL.png
-   :width: 100%
+   :width: 70%
+   :align: center
 
    Krzywa ROC
 

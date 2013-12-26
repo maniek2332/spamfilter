@@ -41,7 +41,7 @@ class ROCScorer(object):
     def __call__(self, estimator, X, y):
         params = self._get_estimator_params(estimator)
         proba = estimator.predict_proba(X)[:, 1]
-        tpr, fpr, thresholds = roc_curve(y, proba)
+        fpr, tpr, thresholds = roc_curve(y, proba)
         thresholds.sort()
         i_tpr = np.interp(self.interp_thresholds, thresholds, tpr)
         i_fpr = np.interp(self.interp_thresholds, thresholds, fpr)
@@ -126,15 +126,15 @@ def roc_model_score(model, train_data, train_labels,
     estimator_name = model.classifier.__class__.__name__
     print "Estimator: %s" % estimator_name
     proba = model.spam_filter.predict_proba(test_data)[:, 1]
-    tpr, fpr, thresholds = roc_curve(test_labels, proba)
+    fpr, tpr, thresholds = roc_curve(test_labels, proba)
     auc = roc_auc_score(test_labels, proba)
     print "Accuracy: %.4f" % model.accuracy(test_data, test_labels)
     print "AUC: %.4f" % auc
 
-    plt.fill_between(tpr, fpr, alpha=0.3)
+    plt.fill_between(fpr, tpr, alpha=0.3)
     plt.title(estimator_name)
-    plt.xlabel('True positive rate')
-    plt.ylabel('False positive rate')
+    plt.xlabel('False positive rate')
+    plt.ylabel('True positive rate')
     plt.savefig('doc/charts/ROC_%s.png' % estimator_name)
     plt.show()
     return estimator_name, tpr, fpr
@@ -161,11 +161,11 @@ def roc_model_score_all():
         plot_data.append(ret)
 
     for (estimator_name, tpr, fpr), color in zip(plot_data, colors):
-        plt.plot(tpr, fpr, lw=2, color=color, label=estimator_name)
-        plt.fill_between(tpr, fpr, alpha=0.1)
+        plt.plot(fpr, tpr, lw=2, color=color, label=estimator_name)
+        plt.fill_between(fpr, tpr, alpha=0.1)
     plt.legend(loc='best')
-    plt.xlabel('True positive rate')
-    plt.ylabel('False positive rate')
+    plt.xlabel('False positive rate')
+    plt.ylabel('True positive rate')
     plt.savefig('doc/charts/ROC_ALL.png')
     plt.show()
 
