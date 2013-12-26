@@ -19,6 +19,12 @@ RE_HEADER = re.compile(r'^[A-Za-z-]+[:]')
 RE_CHARSET = re.compile(r'charset\s*=\s*["]?([^";]+)', re.I)
 RE_HEADER_BOUNDARY = re.compile(r'boundary\s*=\s*["]?([^";]+)', re.I)
 RE_BASE64 = re.compile('(?:(?:[a-zA-Z0-9+/=]+)[\n]?)+')
+
+RE_HTTP_LINK = re.compile(r'https?://\S+', re.I)
+RE_MAIL_LINK = re.compile(r'mailto:\S+@\S+', re.I)
+RE_HTTP_RAW_LINK = re.compile(
+    r'https?://\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:/.*)?', re.I)
+
 HTML_STATS_TAGS = {'b', 'i', 'font', 'center'}
 HTML_PARSER_IGNORE_TAGS = {'br', 'hr', 'img'}
 
@@ -31,7 +37,8 @@ HTMLStats = lambda: pd.Series(
 )
 
 EmailStats = lambda: pd.Series(
-    index=['attached_images', 'charset_errors'],
+    index=['attached_images', 'charset_errors',
+           'http_links', 'http_raw_links', 'mail_links'],
     dtype='int64',
     data=0
 )
@@ -74,6 +81,10 @@ class StatsHTMLParser(HTMLParser):
         return "\n".join(self.text_list)
 
     def handle_starttag(self, tag, attrs):
+        if tag == 'a':
+            attrs = dict(attrs)
+            if 'href' in attrs:
+                self.text_list.append(attrs['href'])
         if tag in HTML_PARSER_IGNORE_TAGS:
             return
         self.tag_stack.insert(0, tag)
@@ -118,6 +129,7 @@ class MessageParser(object):
         self.head, self.body = self.content.split('\n\n', 1)
         self._parse_headers()
         self._decode_body()
+        self._count_links()
 
     @property
     def subject(self):
@@ -271,14 +283,40 @@ class MessageParser(object):
         self.body = parser.text
         self.html_stats = parser.stats
 
+    def _count_links(self):
+        mail_links = RE_MAIL_LINK.findall(self.body)
+        self.body = RE_MAIL_LINK.sub('', self.body)
+        self.email_stats['mail_links'] = len(mail_links)
+
+        http_links = RE_HTTP_LINK.findall(self.body)
+        self.body = RE_HTTP_LINK.sub('', self.body)
+        self.email_stats['http_links'] = len(http_links)
+
+        http_raw_links = [link for link in http_links
+                          if RE_HTTP_RAW_LINK.match(link)]
+        self.email_stats['http_links'] = len(http_raw_links)
+
     def as_series(self):
-        s = pd.Series({'plain_body': self.body})
+        body_length = len(self.body)
+        s = pd.Series({'plain_body': self.body, 'body_length': body_length})
+
+        rel_email_stats = self.email_stats.astype('float32')
+        rel_email_stats.index = ['rel_' + idx for idx in
+                                 rel_email_stats.index]
+        rel_email_stats /= body_length
+        rel_html_stats = self.html_stats.astype('float32')
+        rel_html_stats.index = ['rel_' + idx for idx in
+                                 rel_html_stats.index]
+        rel_html_stats /= body_length
+
         s_headers = pd.Series(dict(self.headers))
         s_headers.index = s_headers.index.map(lambda h: 'h_' + h.lower())
         s = (s
              .append(s_headers, True)
              .append(self.email_stats, True)
              .append(self.html_stats, True)
+             .append(rel_email_stats, True)
+             .append(rel_html_stats, True)
              )
         s.name = self.name
         return s
