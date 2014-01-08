@@ -1,10 +1,60 @@
-##################################################################
-Implementacja filtra antyspamowego przy użyciu uczenia maszynowego
-##################################################################
+.. class:: center
+
+   POLITECHNIKA KRAKOWSKA
+
+.. class:: center
+
+   IM. TADEUSZA KOŚCIUSZKI
+
+.. class:: center
+
+   WYDZIAŁ FIZYKI MATEMATYKI I INFORMATYKI
+
+.. class:: center
+
+   KIERUNEK INFORMATYKA
+
+.. space:: 70
+
+.. class:: center
+
+   MARIUSZ OKULANIS
+
+.. space:: 30
+
+.. class:: title
+
+   Implementacja filtra antyspamowego przy użyciu uczenia maszynowego
+
+.. class:: title
+
+    Implementation of the anti-spam filter using machine learning algorithms 
+
+.. space:: 50
+
+.. class:: center
+
+   PRACA INŻYNIERSKA
+
+.. class:: center
+
+   STUDIA STACJONARNE
+
+.. space:: 80
+
+.. class:: right
+
+   Promotor: dr inż. Michał Bereta
+
+.. space:: 120
+
+.. class:: center
+
+   Kraków 2014
 
 .. raw:: pdf
 
-    PageBreak
+    PageBreak oneColumn
 
 .. contents:: Spis treści
    :depth: 2
@@ -15,6 +65,12 @@ Implementacja filtra antyspamowego przy użyciu uczenia maszynowego
 .. raw:: pdf
 
     PageBreak
+
+.. footer::
+
+   .. class:: center
+
+    ###Page###
 
 
 
@@ -33,7 +89,7 @@ jest:
 
 #. Poprawne wczytanie i przetworzenie dowolnej wiadomości e-mail.
 #. Nauka klasyfikacji spamu na podstawie danych testowych.
-#. Udostępnienie interfejsu pozwalającego zewnętrznym aplikacją na
+#. Udostępnienie interfejsu pozwalającego zewnętrznym aplikacjom na
    sklasyfikowanie e-maili.
 
 Przy klasyfikacji system skupiać się będzie przede wszystkim na treści
@@ -43,7 +99,7 @@ z którego wiadomość nadeszła nie będą brane pod uwagę.
 Uczenie maszynowe
 -----------------
 
-Uczenie maszynową jest dziedziną sztucznej inteligencji. Polega ono
+Uczenie maszynowe jest dziedziną sztucznej inteligencji. Polega ono
 na tworzeniu systemów, które na podstawie przykładów są w stanie uczyć
 się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia.
 
@@ -74,22 +130,22 @@ Parser wiadomości e-mail
 Podstawową funkcją parsera jest poprawne wczytanie wiadomości
 e-mail, w tym celu musi on:
 
-#. wczytać nagłówki wiadomości,
-#. wczytać ciało wiadomości,
-#. zdekodować ciało wiadomości na podstawie kodowania, i strony
-   kodowej znalezionych w nagłówku,
-#. rozpoznać czy ciało wiadomości jest HTMLem i poprawnie go sparsować.
+#. Wczytać nagłówki wiadomości.
+#. Wczytać ciało wiadomościW
+#. Zdekodować ciało wiadomości na podstawie kodowania, i strony
+   kodowej znalezionych w nagłówku.
+#. Rozpoznać czy ciało wiadomości jest HTMLem i poprawnie go sparsować.
 
 Na parsowanie HTMLa składa się:
 
-#. przetworzenie ciała do prostego tekstu (plaintext),
-#. podsumowanie ilości i typów tagów użytych w wiadomości,
-#. podliczenie ilości błędów drzewa w wiadomości.
+#. Przetworzenie ciała do prostego tekstu (plaintext).
+#. Podsumowanie liczby i typów tagów użytych w wiadomości.
+#. Podliczenie liczby błędów drzewa w wiadomości.
 
 Sam parser ma postać modułu języka Python. Pozwala to na łatwe
-połączenie go z resztą pracy inżynierskiej. Po wczytaniu wiadomości
-możemy pobrać wszystkie zebrane informacje z wewnętrznej
-obiektowej struktury modułu.
+połączenie go z pozostałymi elementami pracy inżynierskiej.
+Po wczytaniu wiadomości możemy pobrać wszystkie zebrane informacje
+z wewnętrznej obiektowej struktury modułu.
 
 Ekstraktor cech
 ~~~~~~~~~~~~~~~
@@ -97,9 +153,9 @@ Ekstraktor cech
 Po wczytaniu wiadomości należy przedstawić zawarte w niej informacje
 w formie numerycznej. Esktraktor zajmuje się takimi zadaniami jak:
 
-#. Zliczenie wystąpień słów w temacie wiadomości
-#. Zliczenie wystąpień słów w ciele wiadomości
-#. Zliczenie wystąpień linków i adresów w ciele wiadomości
+#. Zliczenie wystąpień słów w temacie wiadomości.
+#. Zliczenie wystąpień słów w ciele wiadomości.
+#. Zliczenie wystąpień linków i adresów w ciele wiadomości.
 
 Klasyfikator
 ~~~~~~~~~~~~
@@ -114,10 +170,10 @@ Serwer HTTP
 
 Zadaniem serwera jest:
 
-#. nasłuchiwanie żądań HTTP z wiadomościami nadsyłanych przez programy
-   pocztowe,
-#. sprawdzenie w klasyfikatorze nadesłanej wiadomości,
-#. odesłanie odpowiedzi zgodnej z przewidywaniami klasyfikatora.
+#. Nasłuchiwanie żądań HTTP z wiadomościami nadsyłanych przez programy
+   pocztowe.
+#. Sprawdzenie w klasyfikatorze nadesłanej wiadomości.
+#. Odesłanie odpowiedzi zgodnej z przewidywaniami klasyfikatora.
 
 Wtyczka do programu pocztowego
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -139,16 +195,19 @@ Korpus wiadomości
 
    * Szczegółowe informacje na temat kategorii w korpusie
 
-.. table:: Liczba wiadomości w korpusie
+============= =================
+Kategoria     Liczba wiadomości
+============= =================
+Easy Ham      2551
+Hard Ham      250
+Spam          500
+**Suma**      **3301**
+============= =================
 
-    ============= =================
-    Kategoria     Liczba wiadomości
-    ============= =================
-    Easy Ham      2551
-    Hard Ham      250
-    Spam          500
-    **Suma**      **3301**
-    ============= =================
+.. class:: caption
+
+   **Tab. 2.1.** - Liczba wiadomości poszczególnych
+   kategorii znajdujących się w korpusie
 
 Podział korpusu na treningowy i testowy
 ---------------------------------------
@@ -317,7 +376,7 @@ Dekodowanie ciała wiadomości
 W wiadomościach e-mail spotykamy się z dwoma różnorodnymi kodowaniami
 (nie liczymy tutaj kodowań podstawowych ``7bit`` i ``8bit``).
 Jedno z nich to ``quoted-printable``. Jest to stosunkowo proste kodowanie,
-które zapisuje bajty o większej od 127, bajty będące kodami sterującymi
+które zapisuje bajty o wartości większej od 127, bajty będące kodami sterującymi
 ASCII oraz znak ``=`` zapisując każdy z tych bajtów jako wartość
 szesnastkową poprzedzoną znakiem ``=``. Ponieważ zakodowane są tylko
 pojedyncze znaki kodowanie to jest proste do zdekodowania.
@@ -473,11 +532,13 @@ ten model zawiera się w przedziale :math:`0 \leq p \leq 1`.
 
 Krzywa ROC dla regresji logistycznej o domyślnych parametrach:
 
-.. figure:: charts/ROC_LogisticRegression.png
+.. image:: charts/ROC_LogisticRegression.png
    :width: 70%
    :align: center
 
-   Krzywa ROC
+.. class:: caption
+
+   **Rys. 3.1.** - Krzywa ROC dla regresji logistycznej
 
 .. admonition:: TODO
 
@@ -486,29 +547,36 @@ Krzywa ROC dla regresji logistycznej o domyślnych parametrach:
 Naiwny klasyfikator bayesowski
 ------------------------------
 
-.. figure:: charts/ROC_MultinomialNB.png
+.. image:: charts/ROC_MultinomialNB.png
    :width: 70%
    :align: center
 
-   Krzywa ROC
+.. class:: caption
+
+   **Rys. 3.2.** - Krzywa ROC dla naiwnego klasyfikatora
+   bayesowskiego
 
 Maszyna wsparcia wektorowego
 ----------------------------
 
-.. figure:: charts/ROC_SVC.png
+.. image:: charts/ROC_SVC.png
    :width: 70%
    :align: center
 
-   Krzywa ROC
+.. class:: caption
+
+   **Rys. 3.3.** - Krzywa ROC dla maszyny wsparcia wektorowego
 
 Las drzew losowych
 ------------------
 
-.. figure:: charts/ROC_RandomForestClassifier.png
+.. image:: charts/ROC_RandomForestClassifier.png
    :width: 70%
    :align: center
 
-   Krzywa ROC
+.. class:: caption
+
+   **Rys. 3.4.** - Krzywa ROC dla lasu drzew losowych
 
 .. note::
 
@@ -525,11 +593,13 @@ Porównanie efektywności klasyfikatorów
 
 Przykład:
 
-.. figure:: charts/ROC_ALL.png
+.. image:: charts/ROC_ALL.png
    :width: 70%
    :align: center
 
-   Krzywa ROC
+.. class:: caption
+
+   **Rys. 4.1.** - Zbiór krzywych ROC poszczególnych algorytmów
 
 Integracja z programem pocztowym
 ================================

@@ -1,0 +1,48 @@
+styles:
+    base:
+        fontSize: 12
+    bodytext:
+        firstLineIndent: 30
+        leading: 19
+    heading:
+        fontSize: 14
+        fontName: stdBold
+    heading1:
+        fontSize: 14
+        spaceBefore: 20
+    heading2:
+        fontSize: 14
+        spaceBefore: 20
+    heading3:
+        fontSize: 14
+    heading4:
+        fontSize: 14
+    heading5:
+        fontSize: 14
+    heading6:
+        fontSize: 14
+    bullet-list:
+        spaceBefore: 3
+        spaceAfter: 5
+    item-list:
+        spaceBefore: 3
+        spaceAfter: 5
+    title:
+        fontSize: 16
+    caption:
+        parent: bodytext
+        alignment: left
+        firstLineIndent: 0
+        fontName: stdItalic
+
+pageSetup:
+    firstTemplate: coverPage
+fontsAlias:
+    stdFont: "Times New Roman"
+    stdBold: "Times New Roman-Bold"
+    stdItalic: "Times New Roman-Oblique"
+    stdBoldItalic: "Times New Roman-BoldOblique"
+    stdMono: "Courier New"
+    stdMonoBold: "Courier New-Bold"
+    stdMonoBoldItalic: "Courier New-BoldOblique"
+    stdMonoItalic: "Courier New-Oblique"
