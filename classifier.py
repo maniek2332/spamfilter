@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from collections import defaultdict
+
 import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
@@ -16,42 +18,76 @@ from matplotlib import pyplot as plt
 from features import FeaturesExtractor
 from mail_parser import parse_mails, parse_mail_string
 from datasets import TRAIN_ALL, TEST_ALL
+from utils import linestyles_gen, colors_gen
+
+
+class Score(object):
+    def __init__(self, thresholds, fpr, tpr, auc):
+        self.thresholds = thresholds
+        self.fpr = fpr
+        self.tpr = tpr
+        self.auc = auc
+
+    def interpolate(self, target_thresholds):
+        return Score(
+            target_thresholds,
+            np.interp(target_thresholds, self.thresholds, self.fpr),
+            np.interp(target_thresholds, self.thresholds, self.tpr),
+            self.auc)
+
+    def plot(self, color='black', label=None, ls='-'):
+        plt.plot(self.fpr, self.tpr, color=color, label=label, ls=ls, lw=1)
+        plt.fill_between(self.fpr, self.tpr, alpha=0.1)
+
+
+def scores_mean(scores):
+    thresholds = scores[0].thresholds
+    assert all([thresholds == s.thresholds for s in scores[2:]])
+
+    m_fpr = np.vstack([s.fpr for s in scores]).mean(0)
+    m_tpr = np.vstack([s.tpr for s in scores]).mean(0)
+    m_auc = np.vstack([s.auc for s in scores]).mean(0)
+
+    return Score(thresholds, m_fpr, m_tpr, m_auc)
 
 
 class ROCScorer(object):
     def __init__(self, params_names):
         self.params_names = params_names
-        self.scores = {}
-        self.interp_thresholds = np.linspace(0, 1, 5000)
+        self.scores = defaultdict(list)
+        self.interp_thresholds = set()
+
+    @property
+    def interp_scores(self):
+        i_scores = {}
+        interp_thresholds = sorted(self.interp_thresholds)
+        for params, scores in self.scores.items():
+            full_params_name = self._get_full_params_name(params)
+            scores = [s.interpolate(interp_thresholds) for s in scores]
+            i_scores[full_params_name] = scores_mean(scores)
+        return i_scores
+
+    def _get_full_params_name(self, params):
+        full_params_list = ["%s=%r" % (n.split('__')[-1], v)
+                            for n, v in zip(self.params_names, params)]
+        return ", ".join(full_params_list)
 
     def _get_estimator_params(self, estimator):
         all_params = estimator.get_params()
         return tuple(all_params[p] for p in self.params_names)
 
-    def _save_score(self, params, name, values):
-        if params not in self.scores:
-            self.scores[params] = {}
-
-        if name not in self.scores[params]:
-            self.scores[params][name] = values
-        else:
-            self.scores[params][name] = np.vstack([self.scores[params][name],
-                                                  values])
-
     def __call__(self, estimator, X, y):
-        params = self._get_estimator_params(estimator)
         proba = estimator.predict_proba(X)[:, 1]
         fpr, tpr, thresholds = roc_curve(y, proba)
-        thresholds.sort()
-        i_tpr = np.interp(self.interp_thresholds, thresholds, tpr)
-        i_fpr = np.interp(self.interp_thresholds, thresholds, fpr)
-        auc_score = roc_auc_score(y, proba)
+        fpr, tpr, thresholds = fpr[::-1], tpr[::-1], thresholds[::-1]
+        self.interp_thresholds |= set(thresholds.tolist())
+        auc = roc_auc_score(y, proba)
 
-        self._save_score(params, 'tpr', i_tpr)
-        self._save_score(params, 'fpr', i_fpr)
-        self._save_score(params, 'auc', np.array([auc_score]))
+        score = Score(thresholds, fpr, tpr, auc)
+        params = self._get_estimator_params(estimator)
+        self.scores[params].append(score)
 
-        return auc_score
+        return auc
 
 
 class AntispamModel(object):
@@ -105,7 +141,7 @@ def logistic_regression():
 
 
 def logistic_regression_grid():
-    params = {'classifier__C': [1.0, 0.5, 0.1]}
+    params = {'classifier__C': [0.1, 0.5, 1.0, 1.5, 3.5]}
     train_mails = parse_mails(TRAIN_ALL['filename'])
     train_labels = TRAIN_ALL['label']
     clf = LogisticRegression()
@@ -113,11 +149,22 @@ def logistic_regression_grid():
     scorer = ROCScorer(params.keys())
     grid_search = GridSearchCV(
         model.spam_filter, params, scoring=scorer,
-        n_jobs=1, cv=3, refit=False, verbose=True
+        n_jobs=1, cv=5, refit=False, verbose=True
     )
     grid_search.fit(train_mails, train_labels)
+    print grid_search.best_score_
+    print grid_search.best_params_
     print grid_search.grid_scores_
-    return scorer
+
+    for (params, score), color in zip(scorer.interp_scores.items(),
+                                      colors_gen()):
+        label = "%s (AUC: %.4f)" % (params, score.auc)
+        score.plot(label=params, color=color)
+    plt.xlabel('False positive rate')
+    plt.ylabel('True positive rate')
+    plt.legend(loc='best')
+    plt.show()
+    return grid_search
 
 
 def roc_model_score(model, train_data, train_labels,
@@ -182,8 +229,8 @@ def prepare_model():
 
 
 if __name__ == '__main__':
-    roc_model_score_all()
-    #scorer = logistic_regression_grid()
+    #roc_model_score_all()
+    grid_search = logistic_regression_grid()
     #train_mails = parse_mails(TRAIN_ALL['filename'])
     ##clf = LogisticRegression()
     ##clf = RandomForestClassifier()
