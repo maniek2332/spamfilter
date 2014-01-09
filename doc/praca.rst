@@ -122,9 +122,23 @@ Uczenie maszynowe ma szerokie zastosowanie w różnych aspektach
 Biblioteka scikit-learn
 -----------------------
 
-.. note::
+Znana również pod nazwami *scikits.learn* i *sklearn*, jest
+open-source'ową biblioteką przeznaczoną dla języka programowania
+Python. Dostarcza wiele algorytmów uczenia maszynowego do klasyfikacji,
+regresji i grupowania danych. Prócz tego biblioteka zawiera również
+funkcje pomocnicze służące między innymi do:
 
-  Opis biblioteki z której zaczerpnięte będą implementacje alogrytmów
+ * normalizacji danych,
+ * kroswalidacji systemów,
+ * mierzenia efektywności systemów.
+
+Dla algorytmów takich jak regresja logistyczna i
+maszyna wsparcia wektorowego *scikit-learn*
+wykorzystuje zewnętrzne biblioteki *LIBLINEAR* [2]_ i *LIBSVM* [3]_,
+co zapewnia wysoką wydajność obliczeń.
+
+.. [2] http://www.csie.ntu.edu.tw/~cjlin/liblinear/
+.. [3] http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
 Elementy projektu
 -----------------
@@ -188,8 +202,10 @@ Wtyczka do programu pocztowego
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Jest to prosty skrypt który pozwala programowi pocztowemu
-``Claws-Mail`` na wysłanie wybranych wiadomości do klasyfikatora
+*Claws-Mail* [4]_ na wysłanie wybranych wiadomości do klasyfikatora
 (poprzez protokół HTTP).
+
+.. [4] http://www.claws-mail.org/
 
 Przetwarzanie wiadomości
 ========================
@@ -626,6 +642,50 @@ Przykład:
 
 Integracja z programem pocztowym
 ================================
+
+Klient poczty Claws Mail
+------------------------
+
+*Claws Mail* jest prostym klientem poczty elektronicznej przeznaczonym
+zarówno na systemy operacyjne z rodziny Windows jaki i Unix.
+
+Został on wykorzystany w tej pracy, ze względu na możliwość wykonywania
+przez niego skryptów języka Python. Skrypt taki w trakcie wykonania
+uzyskuje dostęp do okna programu i znajdujących się w nim
+wiadomości i folderów. Z użyciem tego mechanizmu wykonana została integracja
+klienta poczty z filtrem antyspamowym (a dokładniej jego serwerem HTTP).
+Po uruchomieniu skrypt wykonuje następujące kroki:
+
+#. W API klienta uzyskuje dostęp do aktualnie wybranego folderu i znajduje
+   w nim wszystkie nieprzeczytane wiadomości.
+#. Dla każdej nieprzeczytanej wiadomości odczytany zostaje plik zawierający
+   e-mail w postaci surowej.
+#. Każda surowa wiadomość zostaje wysłana osobno, za pomocą protokołu HTTP,
+   metodą ``PUT``, na adres http://127.0.0.1:2220/.
+#. Skrypt oczekuje na odpowiedź od serwera, jeśli w odpowiedzi otrzyma
+   kod HTTP ``221`` wiadomość zostaje uznana za spam i przeniesiona do
+   folderu "Kosz".
+#. Po sprawdzeniu wszystkich wiadomości wyświetlone zostaje podsumowanie o
+   liczbie wiadomości które zostały rozpoznane jako spam.
+
+Uruchomienie i efekt działania skryptu widoczne są na Rys. 5.1 i Rys. 5.2.
+
+.. image:: images/plugin1_c.png
+   :width: 85%
+   :align: center
+
+.. class:: caption
+
+   **Rys. 5.1.** - Wywołanie skryptu sprawdzającego wiadomości e-mail
+
+.. image:: images/plugin2_c.png
+   :width: 85%
+   :align: center
+
+.. class:: caption
+
+   **Rys. 5.2.** - Efekt działania skryptu sprawdzającego wiadomości e-mail
+
 
 .. note::
 
