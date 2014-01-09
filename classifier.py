@@ -9,6 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 #from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import f1_score, roc_curve, roc_auc_score
 from sklearn.linear_model import LogisticRegression
+from sklearn.cross_validation import StratifiedKFold
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import MultinomialNB
@@ -147,9 +148,10 @@ def logistic_regression_grid():
     clf = LogisticRegression()
     model = AntispamModel(clf)
     scorer = ROCScorer(params.keys())
+    cv = StratifiedKFold(train_labels, 5)
     grid_search = GridSearchCV(
-        model.spam_filter, params, scoring=scorer,
-        n_jobs=1, cv=5, refit=False, verbose=True
+        model.spam_filter, params, scoring='f1',
+        n_jobs=1, cv=cv, refit=False, verbose=True
     )
     grid_search.fit(train_mails, train_labels)
     print grid_search.best_score_

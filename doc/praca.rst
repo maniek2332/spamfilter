@@ -103,6 +103,14 @@ Uczenie maszynowe jest dziedziną sztucznej inteligencji. Polega ono
 na tworzeniu systemów, które na podstawie przykładów są w stanie uczyć
 się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia.
 
+Uczenie się systemu oznacza wprowadzenie zmian dotyczących działania
+systemu wraz z napływem nowych informacji. Zmiany te umożliwiają
+bardziej efektywne wykonywanie tych samych lub podobnych zadań
+w przyszłości. [1]_
+
+.. [1] Bolc L., Zaremba P., Wprowadzenie do uczenia się maszyn,
+   Akademicka Oficyna Wydawnicza, 1993
+
 Uczenie maszynowe ma szerokie zastosowanie w różnych aspektach
 życia, stosuje się je między innymi do:
 
@@ -131,7 +139,7 @@ Podstawową funkcją parsera jest poprawne wczytanie wiadomości
 e-mail, w tym celu musi on:
 
 #. Wczytać nagłówki wiadomości.
-#. Wczytać ciało wiadomościW
+#. Wczytać ciało wiadomości.
 #. Zdekodować ciało wiadomości na podstawie kodowania, i strony
    kodowej znalezionych w nagłówku.
 #. Rozpoznać czy ciało wiadomości jest HTMLem i poprawnie go sparsować.
@@ -142,10 +150,11 @@ Na parsowanie HTMLa składa się:
 #. Podsumowanie liczby i typów tagów użytych w wiadomości.
 #. Podliczenie liczby błędów drzewa w wiadomości.
 
-Sam parser ma postać modułu języka Python. Pozwala to na łatwe
-połączenie go z pozostałymi elementami pracy inżynierskiej.
-Po wczytaniu wiadomości możemy pobrać wszystkie zebrane informacje
-z wewnętrznej obiektowej struktury modułu.
+..
+    Sam parser ma postać modułu języka Python. Pozwala to na łatwe
+    połączenie go z pozostałymi elementami pracy inżynierskiej.
+    Po wczytaniu wiadomości możemy pobrać wszystkie zebrane informacje
+    z wewnętrznej obiektowej struktury modułu.
 
 Ekstraktor cech
 ~~~~~~~~~~~~~~~
@@ -208,22 +217,6 @@ Spam          500
 
    **Tab. 2.1.** - Liczba wiadomości poszczególnych
    kategorii znajdujących się w korpusie
-
-Podział korpusu na treningowy i testowy
----------------------------------------
-
-W celu uzyskania miarodajnych wyników podczas testowania algorytmów
-uczenia maszynowego wszystkie pomiary wydajności należy wykonywać
-na innym zestawie danych niż te użyte do treningu. W tym celu korpus
-wiadomości został podzielony na zestaw treningowy i zestaw testowy
-według poniższych reguł:
-
-* dla każdej kategorii zostało wybranych 20% wiadomości i umieszczono
-  je w korpusie testowym
-* pozostałe 80% wiadomości znalazło się w korpusie treningowym
-
-Podział ten został dokonany tylko raz i jest niezmienny we
-wszystkich pomiarach w dalszej części pracy.
 
 Budowa wiadomości e-mail
 ------------------------
@@ -518,10 +511,39 @@ Przygotowanie danych wejściowych dla klasyfikatorów
 Algorytmy uczenia maszynowego
 =============================
 
-.. note::
+Kroswalidacja
+-------------
 
-  Krótki wstęp teoretyczny do poszczególnych algorytmów, następnie opis
-  uczenia tych algorytmów, doboru ich parametrów itp.
+W celu uzyskania miarodajnych wyników podczas testowania algorytmów
+uczenia maszynowego wszystkie pomiary wydajności należy wykonywać
+na innym zestawie danych niż te użyte do treningu. W tym celu korpus
+wiadomości został podzielony na zestaw treningowy i zestaw testowy
+według poniższych reguł:
+
+#. Cały korpus zostaje podzielony na :math:`k` równych części, przy
+   czym w każdej z części proporcja wiadomości spamowych i niespamowych
+   jest taka sama.
+#. Walidacja zostaje wykonana :math:`k` razy.
+#. W każdej walidacji :math:`k - 1` części zostaje wykorzystanych jako
+   dane treningowe, a pozostała część jako dane testowe.
+#. Wyniki powyższych walidacji zostają uśrednione.
+
+Krzywa ROC
+----------
+
+Krzywa ROC (*receiver operator characteristic*) jest techniką wizualizacji
+wydajności klasyfikatora. Technika ta wykorzystywana jest głównie
+w teorii detekcji sygnałów,
+znalazła zastosowanie również w uczeniu maszynowym. Krzywa taka opisuje
+trafność klasyfikacji w zależności od progu decyzyjnego. Tworzona jest
+poprzez wyznaczanie liczby przykładów które zostały poprawnie zakwalifikowane
+jako należące do rozważanej klasy (TPR, *true positive rate*) oraz
+liczby przykładów które zostały błędnie zakwalifikowane jako należące do klasy
+(FPR, *false positive rate*) dla różnych progów decyzyjnych.
+
+W celu uzyskania skalarnej miary wydajności liczone jest pole pod krzywą.
+Miara taka nosi nazwę AUC.
+
 
 Regresja logistyczna
 --------------------
@@ -530,7 +552,8 @@ Regresja logistyczna jest modelem liniowym klasyfikacji danych.
 Dzięki wykorzystaniu funkcji logistycznej wartość przewidywana przez
 ten model zawiera się w przedziale :math:`0 \leq p \leq 1`.
 
-Krzywa ROC dla regresji logistycznej o domyślnych parametrach:
+Rys. 3.1 przedstawia krzywe ROC dla regresji logistycznej z użyciem
+różnych wartości parametru :math:`C`.
 
 .. image:: charts/ROC_LogisticRegression.png
    :width: 70%
