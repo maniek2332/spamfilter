@@ -221,9 +221,9 @@ Surowa wiadomość e-mail składa się z dwóch części: nagłówków i
 ciała. Części te oddzielone są od siebie sekwencją znaków
 ``<CR><LF><CR><LF>`` (CR - Carriage Return, LF - Line Feed).
 
-Część nagłówkowa składa z wielu nagłówków w formacie::
+Część nagłówkowa składa z wielu nagłówków w formacie:
 
-    Nazwa nagłówka: Wartość nagłówka
+| ``Nazwa nagłówka: Wartość nagłówka``
 
 Jeden taki nagłówek może zajmować kilka linijek (każda kolejna
 linijka musi się rozpoczynać białymi znakami - spacje lub
@@ -423,13 +423,13 @@ W niektórych wiadomościach zdarza się spotkać z sytuacją kiedy tylko
 początek ciała jest zakodowane jako ``base64``, natomiast reszta tekstu
 zapisana jest prostym tekstem. Z tego powodu do wyznaczenia
 części wiadomości, która jest zakodowana wykorzystane zostało
-wyrażenie regularne, które dopasowywane jest do ciała::
+wyrażenie regularne, które dopasowywane jest do ciała:
 
-    RE_BASE64 = re.compile('(?:(?:[a-zA-Z0-9+/=]+)[\n]?)+')
+| ``RE_BASE64 = re.compile('(?:(?:[a-zA-Z0-9+/=]+)[\n]?)+')``
 
-Tekst "Ala ma kota" zapisany w ``base64`` wygląda następująco::
+Tekst "Ala ma kota" zapisany w ``base64`` wygląda następująco:
 
-    QWxhIG1hIGtvdGE=
+| ``QWxhIG1hIGtvdGE=``
 
 Aby wiadomość mogła być prawidłowo wyświetlona musi zostać ona wczytana
 przy pomocy odpowiedniej strony kodowej. Strona kodowa jakiej potrzebujemy
