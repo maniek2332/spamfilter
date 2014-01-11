@@ -24,9 +24,13 @@ styles:
     bullet-list:
         spaceBefore: 3
         spaceAfter: 5
+    bullet-list-item:
+        firstLineIndent: 0
     item-list:
         spaceBefore: 3
         spaceAfter: 5
+    item-list-item:
+        firstLineIndent: 0
     table-heading:
         fontName: "FreeSerif"
         fontSize: 12

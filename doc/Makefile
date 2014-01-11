@@ -1,6 +1,6 @@
 STYLE=-s pk_inz
 EXTENSIONS=-e preprocess -e dotted_toc
-OPTS=--real-footnotes --font-path=fonts
+OPTS=--font-path=fonts
 
 # requires: docutils
 pdf: paper.rst

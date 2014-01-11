@@ -48,14 +48,15 @@ Uczenie maszynowe
 
 Uczenie maszynowe jest dziedziną sztucznej inteligencji. Polega ono
 na tworzeniu systemów, które na podstawie przykładów są w stanie uczyć
-się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia.
+się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia. [#]_
 
-Uczenie się systemu oznacza wprowadzenie zmian dotyczących działania
-systemu wraz z napływem nowych informacji. Zmiany te umożliwiają
-bardziej efektywne wykonywanie tych samych lub podobnych zadań
-w przyszłości. [1]_
+..
+    Uczenie się systemu oznacza wprowadzenie zmian dotyczących działania
+    systemu wraz z napływem nowych informacji. Zmiany te umożliwiają
+    bardziej efektywne wykonywanie tych samych lub podobnych zadań
+    w przyszłości. [#]_
 
-.. [1] Bolc L., Zaremba P., Wprowadzenie do uczenia się maszyn,
+.. [#] Bolc L., Zaremba P., Wprowadzenie do uczenia się maszyn,
    Akademicka Oficyna Wydawnicza, 1993
 
 Uczenie maszynowe ma szerokie zastosowanie w różnych aspektach
@@ -81,11 +82,11 @@ funkcje pomocnicze służące między innymi do:
 
 Dla algorytmów takich jak regresja logistyczna i
 maszyna wsparcia wektorowego *scikit-learn*
-wykorzystuje zewnętrzne biblioteki *LIBLINEAR* [2]_ i *LIBSVM* [3]_,
+wykorzystuje zewnętrzne biblioteki *LIBLINEAR* [#]_ i *LIBSVM* [#]_,
 co zapewnia wysoką wydajność obliczeń.
 
-.. [2] http://www.csie.ntu.edu.tw/~cjlin/liblinear/
-.. [3] http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+.. [#] http://www.csie.ntu.edu.tw/~cjlin/liblinear/
+.. [#] http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
 Elementy projektu
 -----------------
@@ -111,6 +112,11 @@ Na parsowanie HTMLa składa się:
 #. Podsumowanie liczby i typów tagów użytych w wiadomości.
 #. Podliczenie liczby błędów drzewa w wiadomości.
 
+Parser stworzony został w oparciu o moduł *HTMLParser* [#]_ z
+biblioteki standardowej języka Python.
+
+.. [#] http://docs.python.org/2/library/htmlparser.html
+
 ..
     Sam parser ma postać modułu języka Python. Pozwala to na łatwe
     połączenie go z pozostałymi elementami pracy inżynierskiej.
@@ -127,13 +133,19 @@ w formie numerycznej. Ekstraktor zajmuje się takimi zadaniami jak:
 #. Zliczenie wystąpień słów w ciele wiadomości.
 #. Zliczenie wystąpień linków i adresów w ciele wiadomości.
 
+Do zliczania słów wykorzystane zostały narzędzia [#]_ pochodzące
+z biblioteki *scikit-learn*.
+
+.. [#] http://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction
+
 Klasyfikator
 ~~~~~~~~~~~~
 
 Jest to moduł odpowiedzialny za utworzenie modelu klasyfikatora wiadomości.
+Wykorzystuje on informacje uzyskane z ekstraktora cech.
 Znajdują się tutaj funkcje odpowiedzialne za trening oraz
 testowanie modelu, a także wykonujące pomiar wydajności poszczególnych
-algorytmów
+algorytmów.
 
 Serwer HTTP
 ~~~~~~~~~~~
@@ -148,11 +160,11 @@ Zadaniem serwera jest:
 Wtyczka do programu pocztowego
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Jest to prosty skrypt który pozwala programowi pocztowemu
-*Claws-Mail* [4]_ na wysłanie wybranych wiadomości do klasyfikatora
-(poprzez protokół HTTP).
+W celu demonstracji możliwości integracji filtra antyspamowego
+z klientami poczty,
+stworzona została przykładowa wtyczka do programu *Claws Mail* [#]_.
 
-.. [4] http://www.claws-mail.org/
+.. [#] http://www.claws-mail.org/
 
 Przetwarzanie wiadomości
 ========================
@@ -160,12 +172,29 @@ Przetwarzanie wiadomości
 Korpus wiadomości
 -----------------
 
-.. note::
-   Informacje na temat korpusu SpamAssasin z którego korzystam
+W projekcie wykorzystana została baza wiadomości
+wykorzystywana w projekcie *SpamAssasin* [#]_. Znajdujące się
+w niej wiadomości pochodzą z różnych źródeł, są to między innymi
+publiczne fora, newslettery stron internetowych oraz skrzynki pocztowe
+osób zaangażowanych w tworzenie korpusu [#]_. Wśród znajdujących
+się w tej bazie e-maili możemy wyróżnić następujące kategorie:
 
-.. admonition:: TODO
+ * **Spam** - wiadomości spamowe, żadne z tych wiadomości nie pochodzą
+   z pułapek na spam - to znaczy - zostały wysłane na adresy e-mailowe
+   służące do normalnej korespondencji.
+ * **Easy Ham** - wiadomości niespamowe, stosunkowe łatwe do odróżnienia
+   od spamu, rzadziej wykorzystują HTML i nieczęsto zawierają
+   typowo spamowe frazy.
+ * **Hard Ham** - wiadomości niespamowe, trudniejsze do odróżnienia od
+   spamu, często zawierają błędnie sformatowany HTML, wykorzystują
+   frazy spotykane w spamie.
 
-   * Szczegółowe informacje na temat kategorii w korpusie
+   Tabela 2.1 zawiera informacje na temat liczby wiadomości w
+   poszczególnych kategoriach.
+
+
+.. [#] http://spamassassin.apache.org/
+.. [#] http://spamassassin.apache.org/publiccorpus/readme.html
 
 ============= =================
 Kategoria     Liczba wiadomości
@@ -587,11 +616,40 @@ Przykład:
 
    **Rys. 4.1.** - Zbiór krzywych ROC poszczególnych algorytmów
 
+
 Integracja z programem pocztowym
 ================================
 
-Klient poczty Claws Mail
-------------------------
+Protokół komunikacji
+--------------------
+
+Założeniem projektu jest umożliwienie dowolnemu klientowi poczty
+na korzystanie z filtra antyspamowego. W tym celu zastosowano
+komunikację bazującą na protokole sieciowym, a dokładniej
+protokole HTTP. Klient chcąc sprawdzić czy dana wiadomość jest
+spamem, wysyła ją do serwera HTTP filtra antyspamowego, a w odpowiedzi
+otrzymuje wartość logiczną (prawda lub fałsz) mówiącą, czy wiadomość
+została uznana za spam.
+
+Serwer działa na porcie ``2220``. Oczekuje na wiadomości w formie
+surowej, wysłane z użyciem metody ``PUT`` [#]_ protokołu HTTP.
+Po otrzymaniu takiej wiadomości serwer podejmuje następujące
+działania:
+
+#. Parsuje surową wiadomość korzystając z opisanego wcześniej
+   parsera wiadomości.
+#. Przekazuje sparsowaną wiadomość do ekstraktora cech.
+#. Dane otrzymane z ekstraktora cech zostają przekazane do
+   wytrenowanego wcześniej algorytmu uczenia maszynowego.
+#. Jeśli algorytm uzna wiadomość za spam, serwer zwróci
+   pustą odpowiedź z kodem HTTP ``221``, w przeciwnym wypadku
+   zwróci pustą odpowiedź z kodem ``220``.
+
+.. [#] http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+   Sekcja 9.6.
+
+Wtyczka do klienta poczty
+-------------------------
 
 *Claws Mail* jest prostym klientem poczty elektronicznej przeznaczonym
 zarówno na systemy operacyjne z rodziny Windows jaki i Unix.
@@ -608,12 +666,12 @@ Po uruchomieniu skrypt wykonuje następujące kroki:
 #. Dla każdej nieprzeczytanej wiadomości odczytany zostaje plik zawierający
    e-mail w postaci surowej.
 #. Każda surowa wiadomość zostaje wysłana osobno, za pomocą protokołu HTTP,
-   metodą ``PUT``, na adres http://127.0.0.1:2220/.
+   metodą ``PUT``, na adres ``127.0.0.1``, port ``2220``.
 #. Skrypt oczekuje na odpowiedź od serwera, jeśli w odpowiedzi otrzyma
    kod HTTP ``221`` wiadomość zostaje uznana za spam i przeniesiona do
    folderu "Kosz".
 #. Po sprawdzeniu wszystkich wiadomości wyświetlone zostaje podsumowanie o
-   liczbie wiadomości które zostały rozpoznane jako spam.
+   liczbie wiadomości, które zostały rozpoznane jako spam.
 
 Uruchomienie i efekt działania skryptu widoczne są na Rys. 5.1 i Rys. 5.2.
 
@@ -652,3 +710,6 @@ Podsumowanie i wnioski
 Bibliografia
 ============
 
+.. Ogólne notatki
+
+   * pokazać przykładowe dane wyciągnięte przez parser wiadomości
