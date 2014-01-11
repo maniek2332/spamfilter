@@ -196,6 +196,10 @@ się w tej bazie e-maili możemy wyróżnić następujące kategorie:
 .. [#] http://spamassassin.apache.org/
 .. [#] http://spamassassin.apache.org/publiccorpus/readme.html
 
+.. admonition:: TODO
+
+   * Szczegółowe informacje na temat kategorii w korpusie
+
 ============= =================
 Kategoria     Liczba wiadomości
 ============= =================
@@ -224,7 +228,9 @@ Część nagłówkowa składa z wielu nagłówków w formacie::
 Jeden taki nagłówek może zajmować kilka linijek (każda kolejna
 linijka musi się rozpoczynać białymi znakami - spacje lub
 tabulacje). Wielkość znaków w nazwie nagłówka nie ma znaczenia.
-Przykładowy nagłówek::
+Listing 2.1 zawiera przykładowy nagłówek
+
+::
 
     Return-Path: <bduyisj36648@Email.cz>
     Delivered-To: yyyy@netnoteinc.com
@@ -242,6 +248,10 @@ Przykładowy nagłówek::
     X-Originalarrivaltime: 06 Jul 2001 02:00:32.0843 (UTC) FILETIME=[708F81B0:
         01C105BF]
     To: undisclosed-recipients:;
+
+.. class:: caption
+
+   **Lis. 2.1.** - Przykładowy nagłówek wiadomości e-mail
 
 Ciało wiadomości to właściwa zawartość e-maila. Może być ono zapisane
 zarówno w języku znaczników jakim jest HTML, jak również jako
@@ -277,7 +287,9 @@ kodowej, w której zapisane zostało ciało. Na podstawie
 tej informacji parser dekoduje tekst wiadomości na swój
 wewnętrzny format.
 
-Przykładowe użycia nagłówka::
+Listing 2.2 zawiera przykłady użycia tego nagłówka.
+
+::
 
     Content-Type: text/html;
     Content-Type: text/html;	charset=iso-8859-1
@@ -299,6 +311,10 @@ Przykładowe użycia nagłówka::
     Content-Type: multipart/alternative; boundary="----=_NextPart_000_81109_01C25FF9.832EE820"
     Content-Type: multipart/mixed; boundary="=_NextPart_Caramail_0190361032516937_ID"
 
+.. class:: caption
+
+   **Lis. 2.2.** - Przykłady wykorzystania nagłówka ``Content-Type``
+
 Content-Transfer-Encoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -311,12 +327,19 @@ kodowań:
 * ``quoted-printable`` - dane zakodowane kodowaniem ``quoted-printable``
 * ``base64`` - dane zakodowane za pomocą ``base64``
 
-Przykładowe nagłówki::
+Listing 2.3 zawiera przykłady wykorzystania tego nagłówka.
+
+::
 
     Content-Transfer-Encoding: 7BIT
     Content-Transfer-Encoding: 8bit
     Content-Transfer-Encoding: QUOTED-PRINTABLE
     Content-Transfer-Encoding: base64
+
+.. class:: caption
+
+   **Lis. 2.3.** - Przykłady wykorzystania
+   nagłówka ``Content-Transfer-Encoding``
 
 Subject
 ~~~~~~~
@@ -325,7 +348,9 @@ W nagłówku tym zapisany jest temat wiadomości. Domyślnie nagłówek
 ten zawiera tylko znaki ASCII. Jednak tutaj podobnie
 jak w ciele wiadomości spotkać się możemy z różnymi stronami kodowymi i
 kodowaniami. Jeśli nagłówek jest dodatkowo zakodowany przyjmuje
-on postać::
+on postać:
+
+::
 
     =?strona_kodowa?kodowanie?zakodowany_temat?=
 
@@ -338,7 +363,7 @@ W celu odczytania takiego tematu najpierw dekodujemy ``zakodowany_temat``
 używając właściwego kodowania, a na końcu odczytujemy go przy pomocy
 podanej strony kodowej.
 
-Przykładowe nagłówki::
+::
 
     Subject: Your eBay account is about to expire!
     Subject: re: domain registration savings
@@ -348,7 +373,12 @@ Przykładowe nagłówki::
     Subject: =?GB2312?B?NTDUqrvxtcPSu9LazuXHp83yRU1BSUy12Na3tcS7+rvh?=
     Subject: =?GB2312?B?0rvN+KGwu92hsczsz8KjrNK71bnM7M/C1qotLS0tMjAwM8TqNNTCMcjVLS00?=
 
-Widzimy tutaj, że w końcówkach niektórych tematów pojawiają się dodatkowe
+.. class:: caption
+
+   **Lis. 2.4.** - Przykłady wykorzystania nagłówka ``Subject``
+
+W listingu 2.4 widzimy, że
+w końcówkach niektórych tematów pojawiają się dodatkowe
 nieznaczące znaki. Jest to technika używana przez spamerów mająca
 na celu zmylenie prostych filtrów antyspamowych, które sprawdzają
 czy dana wiadomość jest spamem bądź na podstawie prostego porównania
@@ -366,7 +396,10 @@ ASCII oraz znak ``=`` zapisując każdy z tych bajtów jako wartość
 szesnastkową poprzedzoną znakiem ``=``. Ponieważ zakodowane są tylko
 pojedyncze znaki kodowanie to jest proste do zdekodowania.
 
-Przykładowy fragment zapisany z użyciem ``quoted-printable``::
+W listingu 2.5 zamieszczono fragment ciała wiadomości
+zakodowanego z wykorzystaniem ``quoted-printable``.
+
+::
 
     <html><body><center>
 
@@ -378,6 +411,11 @@ Przykładowy fragment zapisany z użyciem ``quoted-printable``::
     <font size=3D"7"> 
     <br><center><b>Get 12 FREE VHS or DVDs! </b><br>
     <table bgcolor=3D"white" border=3D"2" width=3D"500">
+
+.. class:: caption
+
+   **Lis. 2.5.** - Fragment ciała wiadomości e-mail zakodowany przy
+   użyciu ``quoted-printable``
 
 Drugim spotykanym kodowaniem jest ``base64``. Jest to inny rodzaj kodowania,
 koduje się za jego pomocą już nie pojedyncze znaki a cały blok danych.
@@ -448,8 +486,10 @@ jest wiadomością wieloczęściową. Z tego powodu wykorzystane zostało
 rozwiązanie rekurencyjne, które łatwo radzi sobie z takim
 problemem.
 
-Przykładowa wiadomość wieloczęściowa z
-``boundary`` zadeklarowanym jako ``BoundaryOfDocument``::
+Listing 2.6 zawiera przykładową wiadomość wieloczęściową.
+Wartość ``boundary`` dla niej to ``BoundaryOfDocument``.
+
+::
 
     This is a multi-part message in MIME format.
 
@@ -482,6 +522,10 @@ Przykładowa wiadomość wieloczęściowa z
     (...)
 
     --BoundaryOfDocument--
+
+.. class:: caption
+
+   **Lis. 2.6.** - Przykładowa wiadomość wieloczęściowa.
 
 Istotne cechy wiadomości
 ------------------------
