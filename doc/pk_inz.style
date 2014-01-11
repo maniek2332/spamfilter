@@ -27,6 +27,9 @@ styles:
     item-list:
         spaceBefore: 3
         spaceAfter: 5
+    table-heading:
+        fontName: "FreeSerif"
+        fontSize: 12
     title:
         fontSize: 16
     caption:

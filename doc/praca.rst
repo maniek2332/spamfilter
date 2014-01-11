@@ -88,12 +88,12 @@ Celem pracy jest stworzenie systemu antyspamowego. Zadaniem systemu
 jest:
 
 #. Poprawne wczytanie i przetworzenie dowolnej wiadomości e-mail.
-#. Nauka klasyfikacji spamu na podstawie danych testowych.
+#. Nauka klasyfikacji spamu na podstawie danych treningowych
 #. Udostępnienie interfejsu pozwalającego zewnętrznym aplikacjom na
    sklasyfikowanie e-maili.
 
 Przy klasyfikacji system skupiać się będzie przede wszystkim na treści
-wiadomości. Informacje takie jak adres nadawcy lub adres serwera
+wiadomości. Informacje takie jak adres nadawcy lub adres serwera,
 z którego wiadomość nadeszła nie będą brane pod uwagę.
 
 Uczenie maszynowe
@@ -144,7 +144,7 @@ Elementy projektu
 -----------------
 
 W filtrze antyspamowym będącym tematem tej pracy możemy wyszczególnić
-poszczególne elementy:
+następujące elementy:
 
 Parser wiadomości e-mail
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -174,7 +174,7 @@ Ekstraktor cech
 ~~~~~~~~~~~~~~~
 
 Po wczytaniu wiadomości należy przedstawić zawarte w niej informacje
-w formie numerycznej. Esktraktor zajmuje się takimi zadaniami jak:
+w formie numerycznej. Ekstraktor zajmuje się takimi zadaniami jak:
 
 #. Zliczenie wystąpień słów w temacie wiadomości.
 #. Zliczenie wystąpień słów w ciele wiadomości.
@@ -297,7 +297,7 @@ zwanym ``boundary`` (granica). Wówczas każda z części posiada
 swoje własne nagłówki i ciało.
 
 Inną ważną informacją zawartą w tym nagłówku jest deklaracja strony
-kodowej w której zapisane zostało ciało. Na podstawie
+kodowej, w której zapisane zostało ciało. Na podstawie
 tej informacji parser dekoduje tekst wiadomości na swój
 wewnętrzny format.
 
@@ -353,7 +353,7 @@ on postać::
 
     =?strona_kodowa?kodowanie?zakodowany_temat?=
 
-* ``strona_kodowa`` to nazwa strony kodowej w jakiej zapisany jest temat,
+* ``strona_kodowa`` to nazwa strony kodowej, w jakiej zapisany jest temat,
 * ``kodowanie`` to litera ``Q`` lub ``B``, wskazuje to typ użytego kodowania,
   ``Q`` to ``quoted-printable``, ``B`` to ``base64``,
 * ``zakodowany_temat`` to zakodowany temat wiadomości.
@@ -406,9 +406,9 @@ Przykładowy fragment zapisany z użyciem ``quoted-printable``::
 Drugim spotykanym kodowaniem jest ``base64``. Jest to inny rodzaj kodowania,
 koduje się za jego pomocą już nie pojedyncze znaki a cały blok danych.
 W niektórych wiadomościach zdarza się spotkać z sytuacją kiedy tylko
-początek ciała jest zakodowana jako ``base64``, natomiast reszta tekstu
+początek ciała jest zakodowane jako ``base64``, natomiast reszta tekstu
 zapisana jest prostym tekstem. Z tego powodu do wyznaczenia
-części wiadomości która jest zakodowana wykorzystane zostało
+części wiadomości, która jest zakodowana wykorzystane zostało
 wyrażenie regularne, które dopasowywane jest do ciała::
 
     RE_BASE64 = re.compile('(?:(?:[a-zA-Z0-9+/=]+)[\n]?)+')
@@ -420,7 +420,7 @@ Tekst "Ala ma kota" zapisany w ``base64`` wygląda następująco::
 Aby wiadomość mogła być prawidłowo wyświetlona musi zostać ona wczytana
 przy pomocy odpowiedniej strony kodowej. Strona kodowa jakiej potrzebujemy
 zadeklarowana jest w nagłówku ``Content-Type`` jako ``charset``.
-Przy przetwarzaniu tekstu może się zdarzyć sytuacja, że bajt który
+Przy przetwarzaniu tekstu może się zdarzyć sytuacja, że bajt, który
 przetwarzamy nie został przewidziany w stronie kodowej. W takim przypadku
 bajt taki jest ignorowany.
 
@@ -437,16 +437,16 @@ błędów występujących w mailach. Najczęściej spotykane to:
 * "zakleszczanie" tagów (np. ``<b><i>Tekst</b></i>``),
 * brak elementu ``<html>`` w dokumencie.
 
-Z tego powodu wykorzystany został parser który wczytuje kolejne
+Z tego powodu wykorzystany został parser, który wczytuje kolejne
 otwarcia tagów, prosty tekst między nimi i zamknięcia tagów.
 Na podstawie napotkanych otwarć i zamknięć tworzy on stos tagów,
 ignoruje jednak przy tym wszelkie niewłaściwe domknięcia (zapisuje
-jednak ich ilość). Zwykły tekst pomiędzy tagami zostaje zapisany do bufora
+jednak ich liczba). Zwykły tekst pomiędzy tagami zostaje zapisany do bufora
 z prostym tekstem.
 
 Prócz ekstrakcji tekstu z dokumentu HTML powyższy parser zbiera również
 statystyki na temat pokrycia tekstu przez tagi (np. ile liter w dokumencie
-było obłożone tagami pogrubienia), oraz zlicza ilość błędów napotkanych
+było obłożone tagami pogrubienia), oraz zlicza liczba błędów napotkanych
 przy przetwarzaniu struktury HTML.
 
 
@@ -532,7 +532,7 @@ Kroswalidacja
 
 W celu uzyskania miarodajnych wyników podczas testowania algorytmów
 uczenia maszynowego wszystkie pomiary wydajności należy wykonywać
-na innym zestawie danych niż te użyte do treningu. W tym celu korpus
+na innym zestawie danych niż te użyte do treningu. W tym celu, korpus
 wiadomości został podzielony na zestaw treningowy i zestaw testowy
 według poniższych reguł:
 
@@ -547,18 +547,18 @@ według poniższych reguł:
 Krzywa ROC
 ----------
 
-Krzywa ROC (*receiver operator characteristic*) jest techniką wizualizacji
+Krzywa ROC (ang. *receiver operator characteristic*) jest techniką wizualizacji
 wydajności klasyfikatora. Technika ta wykorzystywana jest głównie
 w teorii detekcji sygnałów,
 znalazła zastosowanie również w uczeniu maszynowym. Krzywa taka opisuje
 trafność klasyfikacji w zależności od progu decyzyjnego. Tworzona jest
-poprzez wyznaczanie liczby przykładów które zostały poprawnie zakwalifikowane
-jako należące do rozważanej klasy (TPR, *true positive rate*) oraz
-liczby przykładów które zostały błędnie zakwalifikowane jako należące do klasy
-(FPR, *false positive rate*) dla różnych progów decyzyjnych.
+poprzez wyznaczanie liczby przykładów, które zostały poprawnie zakwalifikowane
+jako należące do rozważanej klasy (TPR, ang. *true positive rate*) oraz
+liczby przykładów, które zostały błędnie zakwalifikowane jako należące do klasy
+(FPR, ang. *false positive rate*) dla różnych progów decyzyjnych.
 
-W celu uzyskania skalarnej miary wydajności liczone jest pole pod krzywą.
-Miara taka nosi nazwę AUC.
+W celu uzyskania skalarnej miary wydajności liczone jest pole pod krzywą,
+miara taka nosi nazwę AUC (ang. *Area Under Curve*).
 
 
 Regresja logistyczna
