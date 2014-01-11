@@ -10,5 +10,8 @@
 /mail_db/test_spam.txt
 /mail_db/train_ham.txt
 /mail_db/train_spam.txt
-/doc/praca.pdf
-/doc/prezentacja.pdf
+/doc/paper.pdf
+/doc/paper.rst.build_temp
+/doc/coverpage.rst.build_temp
+/doc/slideshow.pdf
+/doc/slideshow.rst.build_temp
