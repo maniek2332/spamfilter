@@ -350,9 +350,7 @@ jak w ciele wiadomości spotkać się możemy z różnymi stronami kodowymi i
 kodowaniami. Jeśli nagłówek jest dodatkowo zakodowany przyjmuje
 on postać:
 
-::
-
-    =?strona_kodowa?kodowanie?zakodowany_temat?=
+|    ``=?strona_kodowa?kodowanie?zakodowany_temat?=``
 
 * ``strona_kodowa`` to nazwa strony kodowej, w jakiej zapisany jest temat,
 * ``kodowanie`` to litera ``Q`` lub ``B``, wskazuje to typ użytego kodowania,
@@ -601,27 +599,27 @@ Przykładową listę cech zamieszczono w listingu 2.7.
 
 ::
 
-    body_length                                                                 1402
-    tags_count                                                                    93
-    errors_count                                                                  10
-    cov_b                                                                        829
-    cov_i                                                                         48
-    cov_font                                                                    1315
-    cov_center                                                                     0
-    http_links                                                                     2
-    http_raw_links                                                                 0
-    mail_links                                                                     2
-    attached_images                                                                0
-    charset_errors                                                                 0
-    rel_tags_count                                                        0.06633381
-    rel_errors_count                                                     0.007132668
-    rel_cov_b                                                              0.5912982
-    rel_cov_i                                                              0.0342368
-    rel_cov_font                                                           0.9379458
-    rel_cov_center                                                                 0
-    rel_http_links                                                       0.001426534
-    rel_http_raw_links                                                             0
-    rel_mail_links                                                       0.001426534
+    body_length                                                1402
+    tags_count                                                   93
+    errors_count                                                 10
+    cov_b                                                       829
+    cov_i                                                        48
+    cov_font                                                   1315
+    cov_center                                                    0
+    http_links                                                    2
+    http_raw_links                                                0
+    mail_links                                                    2
+    attached_images                                               0
+    charset_errors                                                0
+    rel_tags_count                                       0.06633381
+    rel_errors_count                                    0.007132668
+    rel_cov_b                                             0.5912982
+    rel_cov_i                                             0.0342368
+    rel_cov_font                                          0.9379458
+    rel_cov_center                                                0
+    rel_http_links                                      0.001426534
+    rel_http_raw_links                                            0
+    rel_mail_links                                      0.001426534
 
 .. class:: caption
 
