@@ -530,19 +530,124 @@ Wartość ``boundary`` dla niej to ``BoundaryOfDocument``.
 Istotne cechy wiadomości
 ------------------------
 
-.. note::
+Najważniejszym krokiem podczas tworzenia systemu
+antyspamowego było pobranie odpowiednich cech z wiadomości.
+Informacje zawarte w wiadomości, na które zwracamy uwagę
+to przede wszystkim temat wiadomości i jej treść.
+Innymi ważnymi cechami jest pokrycie tekstu wiadomościami
+tagami wyróżniającymi. Ma to na celu zwrócenie szczególnej
+uwagi na wiadomości gdzie spora część tekstu miała
+na celu przykucie uwagi odbiorcy.
 
-  Zaproponowanie cech wiadomości które mogą być wykorzystane w uczeniu
-  maszynowym
+Algorytmy uczenia maszynowego wymagają, aby ich dane wejściowe
+były danymi numerycznymi. Nie jest to problemem dla danych,
+takich jak liczba użytych tagów, czy procentowe pokrycie
+tekstu danym tagiem. Jednakże, danych tekstowych nie możemy
+przekazać do algorytmów w bezpośredniej formie. W tym celu
+zamieniamy je na dane numeryczne, proces ten zwany jest
+wektoryzacją. Polega on
+na zliczeniu wystąpień najczęściej występujących ``N``
+słów, we wszystkich przetwarzanych tekstach. Efektem takiego
+działania będzie macierz o wymiarze :math:`M \times N`, gdzie
+:math:`M` jest liczbą przetwarzanych tekstów. Macierz ta
+będzie macierzą rzadką. Wartość :math:`N`, będąca liczbą
+najpopularniejszych słów jakie chcemy zliczyć, była dobierana
+eksperymentalnie, testowane były różne warianty.
+
+Wektoryzacja ta została zastosowana do przetworzenia tematów
+wiadomości. Do przetworzenia ciał wiadomości zastosowana
+została inna forma zliczania słów, mianowicie TF-IDF
+(ang. TF - term frequency, IDF - inverse document frequency).
+Użycie tej techniki sprawia, że mniejsza waga zostaje
+przypisana do słów popularnych w wielu wiadomościach,
+np. przyimków [#]_. Podobnie jak przy wektoryzacji
+zliczającej słowa, tutaj także liczba najpopularniejszych
+słów - :math:`N` - była wybierana eksperymentalnie.
+
+Z wiadomości pobrano następujące cechy:
+
+ * ``body_length`` - długość tekstu wiadomości (w znakach),
+ * ``tags_count`` - liczba otwarć tagów HTML,
+ * ``errors_count`` - liczba błędnie zamkniętych tagów HTML,
+ * ``cov_b`` - pokrycie tekstu tagiem ``<b>``
+ * ``cov_i`` - pokrycie tekstu tagiem ``<i>``
+ * ``cov_font`` - pokrycie tekstu tagiem ``<font>``
+ * ``cov_center`` - pokrycie tekstu tagiem ``<center>``
+ * ``http_links`` - liczba linków http w wiadomości
+ * ``http_raw_links`` - liczba linków http w wiadomości, których
+   adres jest podany jako IP,
+ * ``mail_links`` - liczba linków mailowych w wiadomości
+ * ``attached_images`` - liczba obrazków dołączony do wiadomości
+ * ``charset_errors`` - wartość logiczna, oznacza występowanie
+   błędów odczytu wiadomości w zadeklarowanej przez nią stronie
+   kodowej,
+ * zwektoryzowany temat wiadomości,
+ * zwektoryzowana treść wiadomości.
+
+Część cech zostało wyznaczonych w stosunku do długości tekstu
+wiadomości:
+
+ * ``rel_tags_count`` - ``tags_count / body_length``,
+ * ``rel_errors_count`` - ``errors_count / body_length``,
+ * ``rel_cov_b`` - ``cov_b / body_length``,
+ * ``rel_cov_i`` - ``cov_i / body_length``,
+ * ``rel_cov_font`` - ``cov_font / body_length``,
+ * ``rel_cov_center`` - ``cov_center / body_length``,
+ * ``rel_http_links`` - ``http_links / body_length``,
+ * ``rel_http_raw_links`` - ``http_raw_links / body_length``,
+ * ``rel_mail_links`` - ``mail_links / body_length``.
+
+Przykładową listę cech zamieszczono w listingu 2.7.
+
+::
+
+    body_length                                                                 1402
+    tags_count                                                                    93
+    errors_count                                                                  10
+    cov_b                                                                        829
+    cov_i                                                                         48
+    cov_font                                                                    1315
+    cov_center                                                                     0
+    http_links                                                                     2
+    http_raw_links                                                                 0
+    mail_links                                                                     2
+    attached_images                                                                0
+    charset_errors                                                                 0
+    rel_tags_count                                                        0.06633381
+    rel_errors_count                                                     0.007132668
+    rel_cov_b                                                              0.5912982
+    rel_cov_i                                                              0.0342368
+    rel_cov_font                                                           0.9379458
+    rel_cov_center                                                                 0
+    rel_http_links                                                       0.001426534
+    rel_http_raw_links                                                             0
+    rel_mail_links                                                       0.001426534
+
+.. class:: caption
+
+   **Lis. 2.7.** - Lista cech przykładowej wiadomości (nie zawarto
+   cech uzyskanych poprzez wektoryzację tematu i tekstu
+   wiadomości
+
+.. [#] Manning, C. D.; Raghavan, P.; Schutze, H. (2008).
+   "Scoring, term weighting, and the vector space model"
 
 Przygotowanie danych wejściowych dla klasyfikatorów
 ---------------------------------------------------
 
-.. note::
+W uczeniu maszynowym, często stosuje się normalizację danych
+wejściowych. Ma to celu zwiększenie skuteczności działania algorytmów
+uczących się. W tym przypadku zastosowano skalowanie wartości
+cech do zakresu ``[0, 1]``. Typ i zakres normalizacji został
+wybrany ze względu na to, że produktem procesu wektoryzacji
+są macierze rzadkie, z wartościami nie mniejszymi niż 0.
+Taki proces normalizacji nie zaburzy rzadkości macierzy,
+co z kolei ułatwi przetrzymywanie takiej macierzy w pamięci
+operacyjnej.
 
-  Określenie formatu w jakim dane zostaną przekazane klasyfikatorom,
-  ewentualne ich wcześniejsze przetworzenie (np. normalizacja)
+.. TODO
 
+  Wyniki przed i po normalizacji?
 
 Algorytmy uczenia maszynowego
 =============================
