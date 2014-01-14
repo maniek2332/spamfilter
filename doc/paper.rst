@@ -24,9 +24,49 @@
 Wstęp
 =====
 
-.. note::
+Poczta elektroniczna jest wynalazkiem bardzo ułatwiającym komunikacje
+z ludźmi. Pozwala na natychmiastowy kontakt, ze znajomymi, współpracownikami,
+nie ponosząc przy tym żadnych kosztów. Ta ostatnia zaleta, łatwo może
+być również wykorzystana przez spamerów, czyli osoby rozsyłające
+drogą elektroniczną niechciane wiadomości - spam.
 
-  Kilka słów wstępu, krótkie opisanie problemu spamu
+Istnieje wiele
+różnych sposobów obrony przed spamem. Tym któremu poświęcona będzie ta
+praca jest stworzenie systemu, zdolnego nauczyć się rozróżniać
+wiadomości spamowe od niespamowych. Technologią która
+zapewni możliwość uczenia się, będzie uczenie maszynowe.
+Stworzony zostanie system, zdolny do rozróżnienia czy
+dana wiadomość jest spamem, czy też nie (system ten oczywiście
+nie będzie miał stuprocentowej skuteczności). Do nauki wykorzystany
+zostanie publicznie dostępny korpus wiadomości e-mail.
+
+W dalszej części tego rozdziału opisane zostaną szczegółowe cele
+pracy, przybliżone zostanie pojęcie uczenia maszynowego i narzędzia
+z nim związane. Opisana zostanie również budowa filtra antyspamowego
+będącego tematem tej pracy.
+
+W drugim rozdziale przedstawiony zostanie
+korpus wiadomości jaki był wykorzystywany przy trenowaniu i testowaniu
+owego filtra. Przybliżona zostanie struktura wiadomości e-mail, oraz
+techniczne szczegóły na które należy zwrócić uwagę przy przetwarzaniu
+wiadomości. Opisane zostaną cechy wiadomości według których uczyć
+się będzie filtr, oraz mechanizmy które cechy te przetworzą, tak
+aby skorzystać z nich mogły algorytmy uczenia maszynowego.
+
+W rozdziale trzecim opisane zostaną algorytmy uczenia maszynowego,
+oraz efekty ich nauki.
+Przedstawione zostaną także mechanizmy związane z ich testowaniem
+i wizualizacją efektywności. Znajdzie się tam również zbiorcze
+porównanie skuteczności poszczególnych algorytmów.
+
+Rozdział czwarty poświęcony będzie zagadnieniu integracji tworzonego
+filtra antyspamowego z klientami poczty elektronicznej. Opisany
+zostanie stworzony protokół komunikacji i zademonstrowana zostanie
+przykładowa wtyczka dokonująca takiej integracji.
+
+Piąty rozdział poświęcony zostanie podsumowaniu pracy, propozycjom
+jej dalszego rozwoju i wnioskom.
+
 
 Cel pracy
 ---------
@@ -152,8 +192,8 @@ Serwer HTTP
 
 Zadaniem serwera jest:
 
-#. Nasłuchiwanie żądań HTTP z wiadomościami nadsyłanych przez programy
-   pocztowe.
+#. Nasłuchiwanie żądań HTTP (ang. *Hypertext Transfer Protocol*)
+   z wiadomościami nadsyłanych przez programy pocztowe.
 #. Sprawdzenie w klasyfikatorze nadesłanej wiadomości.
 #. Odesłanie odpowiedzi zgodnej z przewidywaniami klasyfikatora.
 
@@ -585,15 +625,15 @@ Z wiadomości pobrano następujące cechy:
 Część cech zostało wyznaczonych w stosunku do długości tekstu
 wiadomości:
 
- * ``rel_tags_count`` - ``tags_count / body_length``,
- * ``rel_errors_count`` - ``errors_count / body_length``,
- * ``rel_cov_b`` - ``cov_b / body_length``,
- * ``rel_cov_i`` - ``cov_i / body_length``,
- * ``rel_cov_font`` - ``cov_font / body_length``,
- * ``rel_cov_center`` - ``cov_center / body_length``,
- * ``rel_http_links`` - ``http_links / body_length``,
- * ``rel_http_raw_links`` - ``http_raw_links / body_length``,
- * ``rel_mail_links`` - ``mail_links / body_length``.
+ * ``rel_tags_count`` - stosunek ``tags_count`` do ``body_length``,
+ * ``rel_errors_count`` - stosunek ``errors_count`` do ``body_length``,
+ * ``rel_cov_b`` - stosunek ``cov_b`` do ``body_length``,
+ * ``rel_cov_i`` - stosunek ``cov_i`` do ``body_length``,
+ * ``rel_cov_font`` - stosunek ``cov_font`` do ``body_length``,
+ * ``rel_cov_center`` - stosunek ``cov_center`` do ``body_length``,
+ * ``rel_http_links`` - stosunek ``http_links`` do ``body_length``,
+ * ``rel_http_raw_links`` - stosunek ``http_raw_links`` do ``body_length``,
+ * ``rel_mail_links`` - stosunek ``mail_links`` do ``body_length``.
 
 Przykładową listę cech zamieszczono w listingu 2.7.
 
@@ -687,11 +727,18 @@ miara taka nosi nazwę AUC (ang. *Area Under Curve*).
 Regresja logistyczna
 --------------------
 
-Regresja logistyczna jest modelem liniowym klasyfikacji danych.
+Regresja logistyczna jest uogólnionym modelem liniowym klasyfikacji danych.
 Dzięki wykorzystaniu funkcji logistycznej wartość przewidywana przez
-ten model zawiera się w przedziale :math:`0 \leq p \leq 1`.
+ten model zawiera się w przedziale :math:`0 \leq p \leq 1` [#]_.
 
-Rys. 3.1 przedstawia krzywe ROC dla regresji logistycznej z użyciem
+Jednym z parametrów regresji logistycznej jakim możemy manipulować
+jest :math:`C`, parametr ten odpowiedzialny jest za regularyzację.
+Regularyzacja ma na celu zapobieganie sytuacji w której algorytm
+nadmiernie dopasuje (ang *overfitting*) się do danych treningowych,
+co obniży jego efektywność dla danych testowych [#]_. Im mniejsza
+wartość :math:`C`, tym regularyzacja będzie silniejsza.
+
+Rys. 3.1 przedstawia krzywe ROC dla regresji logistycznej, z użyciem
 różnych wartości parametru :math:`C`.
 
 .. image:: charts/ROC_LogisticRegression.png
@@ -702,12 +749,26 @@ różnych wartości parametru :math:`C`.
 
    **Rys. 3.1.** - Krzywa ROC dla regresji logistycznej
 
-.. admonition:: TODO
-
-   * Wpływ parametrów na efektywność klasyfikatora
+.. [#] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
+   The Elements of Statistical Learning, 2009
+.. [#] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
+   The Elements of Statistical Learning, 2009
 
 Naiwny klasyfikator bayesowski
 ------------------------------
+
+Klasyfikator bayesowski jest techniką uczenia maszynowego
+stosującą twierdzenie Bayesa do przetwarzanych danych.
+Nazywa się go naiwnym, ponieważ zakładamy, że wszystkie
+przetwarzane cechy są od siebie niezależne. Mimo, że
+założenie to zwykle nie jest spełnione, algorytm
+wciąż jest skuteczny [#]_.
+
+Parametrem jaki kontrolujemy jest tutaj wygładzanie
+Laplace'a - :math:`\alpha`.
+
+.. [#] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
+   The Elements of Statistical Learning, 2009
 
 .. image:: charts/ROC_MultinomialNB.png
    :width: 70%
@@ -721,16 +782,77 @@ Naiwny klasyfikator bayesowski
 Maszyna wsparcia wektorowego
 ----------------------------
 
+Podobnie jak regresja logistyczna, maszyna wsparcia wektorowego
+(ang. SVM - *Support Vector Machine*)
+jest uogólnionym modelem liniowym klasyfikacji. SVM reprezentuje
+dane jako punkty w przestrzeni (wymiar tej przestrzeni jest
+równy liczbie cech danych wejściowych). Celem algorytmu
+jest rozdzielenie przykładów należących do innych grup,
+za pomocą hiperpłaszczyzny, będącej w największym możliwym
+odstępie od punktów które oddziela (przykład takiego
+podziału znajduje się na rysunku 3.3). Ponadto, dzięki
+zastosowaniu funkcji jąder, SVM może zostać zastosowany
+do nieliniowej klasyfikacji [#]_.
+
+Przetestowane zostały dwie wersje SVM:
+
+ * liniowy SVM (bez funkcji jądra); na rysunku 3.4,
+ * SVM z jądrem RBF (ang. *Radial Basis Function*), parametrem
+   funkcji jądra jest :math:`\sigma`; na rysunku 3.5.
+
+Podobnie jak regresji logistycznej, parametrem jest
+tu :math:`C`, odpowiedzialne za regularyzacje.
+
+.. [#] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
+   The Elements of Statistical Learning, 2009
+
+.. image:: images/SVM_hyperplane_stripped.png
+   :width: 65%
+   :align: center
+
+.. class:: caption
+
+   **Rys. 3.3.** - Przykład rodzielenia dwóch kategorii danych
+   przez SVM (Źródło: Wikipedia)
+
 .. image:: charts/ROC_SVC.png
    :width: 70%
    :align: center
 
 .. class:: caption
 
-   **Rys. 3.3.** - Krzywa ROC dla maszyny wsparcia wektorowego
+   **Rys. 3.4.** - Krzywa ROC dla maszyny wsparcia wektorowego
+
+.. image:: charts/ROC_SVC.png
+   :width: 70%
+   :align: center
+
+.. class:: caption
+
+   **Rys. 3.5.** - Krzywa ROC dla maszyny wsparcia wektorowego
 
 Las drzew losowych
 ------------------
+
+Las drzew losowych jest metodą zespołowego uczenia. Polega
+ona na wytrenowaniu wielu prostych, prawdopodobnie słabo
+przystosowanych klasyfikatorów i połączenia ich w jeden
+klasyfikator. W przypadku Lasu drzew losowych jako
+pomniejsze klasyfikatory wykorzystywane są drzewa losowe.
+Świetnie nadają się do tego zadania, ze względu na ich
+możliwość uczenia się skomplikowanych relacji między danymi [#]_.
+
+W przypadku lasów losowych możemy decydować z ilu drzew
+składać się będzie las. Efektywność lasów, w zależności
+od liczby drzew przedstawiono na rysunku 3.6.
+
+Wartą odnotowania zaletą drzew losowych jest fakt, że zarówno
+trening, jak i późniejsza klasyfikacja, mogą zostać zrównoleglone.
+Może to znacząco poprawić szybkość działania na maszynach
+wielordzeniowych i klastrach obliczeniowych.
+
+.. [#] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
+   The Elements of Statistical Learning, 2009
 
 .. image:: charts/ROC_RandomForestClassifier.png
    :width: 70%
@@ -746,7 +868,7 @@ Las drzew losowych
 
 
 Porównanie efektywności klasyfikatorów
-======================================
+--------------------------------------
 
 .. note::
 
@@ -839,20 +961,46 @@ Uruchomienie i efekt działania skryptu widoczne są na Rys. 5.1 i Rys. 5.2.
    **Rys. 5.2.** - Efekt działania skryptu sprawdzającego wiadomości e-mail
 
 
-.. note::
+Podsumowanie i możliwości rozbudowy
+===================================
 
-  Opis mechanizmów programu pocztowego (prawdopodobnie Claws Mail), które
-  umożliwiają stworzenie pluginu, pokazanie jak program został zintegrowany z
-  filtrem.
+Efektem pracy jest kompletny system filtra antyspamowego. Filtr obserwuje
+takie cechy wiadomości jak użyte słowa, czy procentowe pokrycie tekstu
+tagami HTML. Najskuteczniejszym z testowanych algorytmów,
+przy cechach wiadomości wybranych w tej pracy, okazała się
+regresja logistyczna.
+
+.. TODO Szczegółowe wyniki
+
+Oprócz samego klasyfikatora, stworzone zostały narzędzia wspomagające
+pracę filtra. Jednym z tych narzędzi jest parser surowych wiadomości
+e-mail. Potrafi on skutecznie przetwarzać wiadomości wieloczęściowe,
+korzystające z HTML, zakodowane różnymi kodowaniami, zapisane
+w różnych stronach kodowych i zawierające załączniki.
+
+Innym narzędziem, pozwalającym na integrację z programami pocztowymi,
+jest wbudowany w filtr serwer HTTP. Serwer ten służy do odbierania
+wiadomości, które mają zostać sprawdzone.
+Do przetestowania działania serwera
+stworzona została prosta wtyczka do klienta poczty *Claws-Mail*.
+
+W przypadku dalszego rozwoju, warto rozważyć szukanie i tworzenie nowych
+cech wiadomości, a także przetestować inne algorytmy uczenia maszynowego.
+Godnym uwagi jest również zastosowanie stemmingu [#]_ do przetworzenie
+słów wiadomości do formy podstawowej. W przypadku rozbudowy parsera
+wiadomości, warto rozważyć implementacje skuteczniejszego parsowania
+treści HTML, a dokładniej użytych w nich arkuszy stylów CSS
+(ang. *Cascade Style Sheet*). Innym obiecującym kierunkiem możliwości
+jest odczytywanie załączników wiadomości. Ma to zastosowanie w przypadkach
+kiedy spamer próbuje oszukać filtr, poprzez umieszczenie właściwej wiadomości
+np. w pliku PDF (ang. *Portable Document Format*). W przypadku serwera HTTP
+warto zastanowić się nad rozbudową protokołu komunikacyjnego. Obecnie pozwala
+na wysłanie tylko jednej wiadomości w jednym zapytaniu HTTP.
+W przypadku wykorzystania filtra w środowisku gdzie wiele wiadomości
+sprawdzanych byłoby jednocześnie, warto tą funkcję rozbudować.
 
 
-Podsumowanie i wnioski
-======================
-
-.. note::
-
-  Który algorytm okazał się najlepszy, dlaczego tak a nie inaczej, co można
-  poprawić/ulepszyć/przemyśleć
+.. [#] http://en.wikipedia.org/wiki/Stemming
 
 Bibliografia
 ============

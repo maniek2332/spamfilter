@@ -41,6 +41,8 @@ styles:
         alignment: left
         firstLineIndent: 0
         fontName: stdItalic
+    code:
+        keepWithNext: true
 
 pageSetup:
     firstTemplate: coverPage
