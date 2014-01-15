@@ -26,3 +26,5 @@ TRAIN_ALL = pd.concat([TRAIN_SPAM, TRAIN_HAM])
 TEST_SPAM = create_mails_frame(TEST_SPAM_FILE, 1)
 TEST_HAM = create_mails_frame(TEST_HAM_FILE, 0)
 TEST_ALL = pd.concat([TEST_SPAM, TEST_HAM])
+
+COMPLETE_ALL = pd.concat([TRAIN_ALL, TEST_ALL])

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from itertools import cycle
+from itertools import product
 
 from joblib import Memory
 
@@ -15,11 +15,8 @@ LOG.addHandler(logging.StreamHandler())
 LOG.setLevel(logging.WARNING)
 
 LINESTYLES = ['-', '-.', '--', ':']
-COLORS = ['red', 'blue', 'green', 'purple']
+COLORS = ['red', 'blue', 'green', 'cyan', 'orange']
 
 
 def linestyles_gen():
-    return cycle(LINESTYLES)
-
-def colors_gen():
-    return cycle(COLORS)
+    return product(LINESTYLES, COLORS)

@@ -8,30 +8,47 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 
 from mail_parser import parse_mails
-from utils import memory
 from datasets import TRAIN_ALL
 
 
 class FeaturesExtractor(DataFrameMapper):
-    def __init__(self, subject_words=500, text_words=3000):
+    def __init__(self, subject_words=300, text_words=2000):
+        self.subject_vectorizer = CountVectorizer()
+        self.text_vectorizer = TfidfVectorizer()
+        self.stub_extractor = StubExtractor()
+
         self.subject_words = subject_words
         self.text_words = text_words
-
-        self.text_vectorizer = TfidfVectorizer(
-            max_features=self.text_words)
-        self.subject_vectorizer = CountVectorizer(
-            max_features=self.subject_words)
-        self.stub_extractor = StubExtractor()
 
         self.mapping = (
             ('plain_body', self.text_vectorizer),
             ('h_subject', self.subject_vectorizer),
-            (['tags_count', 'errors_count',
+            (['tags_count', 'errors_count', 'body_length',
+              'rel_tags_count', 'rel_errors_count',
               'cov_b', 'cov_i', 'cov_font', 'cov_center',
+              'rel_cov_b', 'rel_cov_i', 'rel_cov_font', 'rel_cov_center',
+              'http_links', 'http_raw_links', 'mail_links',
+              'rel_http_links', 'rel_http_raw_links', 'rel_mail_links',
               'attached_images', 'charset_errors'], self.stub_extractor),
         )
 
         super(FeaturesExtractor, self).__init__(self.mapping)
+
+    @property
+    def subject_words(self):
+        return self.subject_vectorizer.max_features
+
+    @subject_words.setter
+    def subject_words(self, value):
+        self.subject_vectorizer.max_features = value
+
+    @property
+    def text_words(self):
+        return self.text_vectorizer.max_features
+
+    @text_words.setter
+    def text_words(self, value):
+        self.text_vectorizer.max_features = value
 
     # XXX bugfix of converting string columns
     def _get_col_subset(self, X, cols):
