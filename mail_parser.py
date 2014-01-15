@@ -83,7 +83,7 @@ class StatsHTMLParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag == 'a':
             attrs = dict(attrs)
-            if 'href' in attrs:
+            if 'href' in attrs and attrs['href']:
                 self.text_list.append(attrs['href'])
         if tag in HTML_PARSER_IGNORE_TAGS:
             return
@@ -126,7 +126,10 @@ class MessageParser(object):
         self.html_stats = HTMLStats()
         self.email_stats = EmailStats()
 
-        self.head, self.body = self.content.split('\n\n', 1)
+        if '\n\n' in self.content:
+            self.head, self.body = self.content.split('\n\n', 1)
+        else:
+            self.head, self.body = "", ""
         self._parse_headers()
         self._decode_body()
         self._count_links()
@@ -302,12 +305,19 @@ class MessageParser(object):
 
         rel_email_stats = self.email_stats.astype('float32')
         rel_email_stats.index = ['rel_' + idx for idx in
-                                 rel_email_stats.index]
-        rel_email_stats /= body_length
+                                rel_email_stats.index]
+        if body_length > 0:
+            rel_email_stats /= body_length
+        else:
+            rel_email_stats[:] = 0
+
         rel_html_stats = self.html_stats.astype('float32')
         rel_html_stats.index = ['rel_' + idx for idx in
-                                 rel_html_stats.index]
-        rel_html_stats /= body_length
+                                rel_html_stats.index]
+        if body_length > 0:
+            rel_html_stats /= body_length
+        else:
+            rel_html_stats[:] = 0
 
         s_headers = pd.Series(dict(self.headers))
         s_headers.index = s_headers.index.map(lambda h: 'h_' + h.lower())
@@ -319,6 +329,7 @@ class MessageParser(object):
              .append(rel_html_stats, True)
              )
         s.name = self.name
+        s = s.fillna(0)
         return s
 
 
@@ -351,3 +362,5 @@ if __name__ == '__main__':
         pprint(mp.email_stats)
         print "Text length: %d" % len(mp.body)
         print "=============="
+
+        print mp.as_series()

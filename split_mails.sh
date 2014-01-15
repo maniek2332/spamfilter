@@ -1,7 +1,7 @@
 #!/bin/bash
 
-find mail_db/spam/* -name '*.*' | sort -R > mail_db/all_spam.txt
-find mail_db/easy_ham/* mail_db/hard_ham/* -name '*.*' | sort -R > mail_db/all_ham.txt
+find mail_db/spam*/* -name '*.*' | sort -R > mail_db/all_spam.txt
+find mail_db/easy_ham*/* mail_db/hard_ham/* -name '*.*' | sort -R > mail_db/all_ham.txt
 
 SPAM_COUNT=`wc -l < mail_db/all_spam.txt`
 HAM_COUNT=`wc -l < mail_db/all_ham.txt`
