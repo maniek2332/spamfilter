@@ -304,8 +304,7 @@ def classifiers_comparison():
     plt.ylabel('TPR')
     plt.xlim(0, 0.2)
     plt.ylim(0.8, 1)
-    if filepath:
-        plt.savefig(filepath)
+    plt.savefig('doc/charts/ROC_ALL.png')
     plt.show()
 
 
