@@ -263,12 +263,27 @@ def forest_grid():
 
 def classifiers_comparison():
     classifiers = [
-        (LogisticRegression(C=5.0), "Regresja logistyczna"),
-        (MultinomialNB(alpha=0.1), "Naiwny klas. bayesowski"),
-        (SVC(kernel='linear', probability=True,
-             C=3.5, gamma=0.1), "SVM (liniowy)"),
-        (SVC(kernel='rbf', probability=True, C=0.5), "SVM (RBF)"),
-        (RandomForestClassifier(n_estimators=100), "Las drzew losowych"),
+        ("Regresja logistyczna",
+         LogisticRegression(),
+         {'classifier__C': 5.0}),
+
+        ("Naiwny klas. bayesowski",
+         MultinomialNB(),
+         {'classifier__alpha': 0.1}),
+
+        ("SVM (liniowy)",
+         SVC(kernel='linear', probability=True),
+         {'classifier__C': 3.5,
+          'features__text_words': 500, 'features__subject_words': 50}),
+
+        ("SVM (RBF)",
+         SVC(kernel='rbf', probability=True),
+         {'classifier__C': 0.5, 'classifier__gamma': 0.1,
+          'features__text_words': 500, 'features__subject_words': 50}),
+
+        ("Las drzew losowych",
+         RandomForestClassifier(),
+         {'classifier__n_estimators': 100}),
     ]
 
     clf_count = len(classifiers)
@@ -276,10 +291,12 @@ def classifiers_comparison():
     train_mails = parse_mails(COMPLETE_ALL['filename'])
     train_labels = COMPLETE_ALL['label']
     plt.figure(figsize=(8, 12))
-    for (clf, clf_name), (ls, lc) in zip(classifiers, linestyles_gen()):
+    for (clf_name, clf, params), (ls, lc) in zip(classifiers,
+                                                 linestyles_gen()):
         model = AntispamModel(clf)
-        cv = StratifiedKFold(train_labels, 3)
-        scorer = ROCScorer(model.spam_filter.get_params().keys())
+        model.spam_filter.set_params(**params)
+        cv = StratifiedKFold(train_labels, 5)
+        scorer = ROCScorer(params.keys())
         cross_val_score(model.spam_filter, train_mails, train_labels,
                         cv=cv, scoring=scorer, verbose=2)
         score = scorer.interp_scores.values()[0]
@@ -306,7 +323,6 @@ def classifiers_comparison():
     plt.ylim(0.8, 1)
     plt.savefig('doc/charts/ROC_ALL.png')
     plt.show()
-
 
 
 def roc_model_score(model, train_data, train_labels,
