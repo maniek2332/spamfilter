@@ -862,7 +862,7 @@ Podobnie jak regresja logistyczna, maszyna wsparcia wektorowego
 jest uogólnionym modelem liniowym klasyfikacji. SVM reprezentuje
 dane jako punkty w przestrzeni (wymiar tej przestrzeni jest
 równy liczbie cech danych wejściowych). Celem algorytmu
-jest rozdzielenie przykładów należących do innych grup,
+jest rozdzielenie przykładów należących do różnych kategorii,
 za pomocą hiperpłaszczyzny, będącej w największym możliwym
 odstępie od punktów które oddziela (przykład takiego
 podziału znajduje się na rysunku 3.3). Ponadto, dzięki
@@ -950,10 +950,10 @@ Las drzew losowych
 Las drzew losowych jest metodą zespołowego uczenia. Polega
 ona na wytrenowaniu wielu prostych, prawdopodobnie słabo
 przystosowanych klasyfikatorów i połączenia ich w jeden
-klasyfikator. W przypadku Lasu drzew losowych jako
-pomniejsze klasyfikatory wykorzystywane są drzewa losowe.
+klasyfikator. W przypadku Lasu drzew losowych, jako
+pomniejsze klasyfikatory wykorzystywane są drzewa decyzyjne.
 Świetnie nadają się do tego zadania, ze względu na ich
-możliwość uczenia się skomplikowanych relacji między danymi [10]_.
+możliwość uczenia się skomplikowanych relacji między cechami [10]_.
 
 W przypadku lasów losowych możemy decydować z ilu drzew
 składać się będzie las, odpowiedzialny jest za to parametr
