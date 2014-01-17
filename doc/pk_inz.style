@@ -44,6 +44,8 @@ styles:
     code:
         keepWithNext: true
 
+linkColor: black
+
 pageSetup:
     firstTemplate: coverPage
 fontsAlias:

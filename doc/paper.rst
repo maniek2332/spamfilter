@@ -34,38 +34,38 @@ wiadomości e-mail między innymi do rozsyłania treści reklamowych.
 Istnieje wiele
 różnych sposobów obrony przed spamem. Tym któremu poświęcona będzie ta
 praca jest stworzenie systemu, zdolnego nauczyć się rozróżniać
-wiadomości spamowe od niespamowych. Technologią która
+wiadomości spamowe od niespamowych. Technologią, która
 zapewni możliwość uczenia się, będzie uczenie maszynowe.
 Stworzony zostanie system, zdolny do rozróżnienia czy
 dana wiadomość jest spamem, czy też nie (system ten oczywiście
 nie będzie miał stuprocentowej skuteczności). Do nauki wykorzystany
 zostanie publicznie dostępny korpus wiadomości e-mail.
 
-W dalszej części tego rozdziału opisane zostaną szczegółowe cele
+W dalszej części tego rozdziału opisane zostały szczegółowe cele
 pracy, przybliżone zostanie pojęcie uczenia maszynowego i narzędzia
-z nim związane. Opisana zostanie również budowa filtra antyspamowego
+z nim związane. Opisana została również budowa filtra antyspamowego
 będącego tematem tej pracy.
 
-W drugim rozdziale przedstawiony zostanie
+W drugim rozdziale przedstawiony został
 korpus wiadomości jaki był wykorzystywany przy trenowaniu i testowaniu
-owego filtra. Przybliżona zostanie struktura wiadomości e-mail, oraz
+owego filtra. Przybliżona została struktura wiadomości e-mail, oraz
 techniczne szczegóły na które należy zwrócić uwagę przy przetwarzaniu
-wiadomości. Opisane zostaną cechy wiadomości według których uczyć
-się będzie filtr oraz mechanizmy które cechy te przetworzą, tak
+wiadomości. Opisane zostały cechy wiadomości według których uczyć
+się będzie filtr oraz mechanizmy które cechy te przetwarzają, tak
 aby skorzystać z nich mogły algorytmy uczenia maszynowego.
 
-W rozdziale trzecim opisane zostaną algorytmy uczenia maszynowego,
+W rozdziale trzecim opisane zostały algorytmy uczenia maszynowego,
 oraz efekty ich nauki.
-Przedstawione zostaną także mechanizmy związane z ich testowaniem
-i wizualizacją efektywności. Znajdzie się tam również zbiorcze
+Przedstawione zostały także mechanizmy związane z ich testowaniem
+i wizualizacją efektywności. Znalazło się tam również zbiorcze
 porównanie skuteczności poszczególnych algorytmów.
 
-Rozdział czwarty poświęcony będzie zagadnieniu integracji tworzonego
-filtra antyspamowego z klientami poczty elektronicznej. Opisany
-zostanie stworzony protokół komunikacji i zademonstrowana zostanie
+Rozdział czwarty poświęcony został zagadnieniu integracji tworzonego
+filtra antyspamowego z klientami poczty elektronicznej. Został
+opisany stworzony protokół komunikacji i zademonstrowana został
 przykładowa wtyczka dokonująca takiej integracji.
 
-Piąty rozdział poświęcony zostanie podsumowaniu pracy i propozycjom
+Piąty rozdział został poświęcony podsumowaniu pracy i propozycjom
 jej dalszego rozwoju.
 
 Cel pracy
@@ -88,13 +88,9 @@ Uczenie maszynowe
 
 Uczenie maszynowe jest dziedziną sztucznej inteligencji. Polega ono
 na tworzeniu systemów, które na podstawie przykładów są w stanie uczyć
-się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia. [1]_
-
-..
-    Uczenie się systemu oznacza wprowadzenie zmian dotyczących działania
-    systemu wraz z napływem nowych informacji. Zmiany te umożliwiają
-    bardziej efektywne wykonywanie tych samych lub podobnych zadań
-    w przyszłości. [x]_
+się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia.
+Umożliwia im to efektywniejsze wykonywanie podobnych zadań
+w przyszłości. [1]_
 
 .. [1] Bolc L., Zaremba P., Wprowadzenie do uczenia się maszyn,
    Akademicka Oficyna Wydawnicza, 1993
@@ -182,7 +178,7 @@ w formie numerycznej. Ekstraktor zajmuje się takimi zadaniami jak:
 Do zliczania słów wykorzystane zostały narzędzia [5]_ pochodzące
 z biblioteki *scikit-learn*.
 
-.. [5] http://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction
+.. [5] http://scikit-learn.org/stable/modules/feature_extraction.html
 
 Klasyfikator
 ~~~~~~~~~~~~
@@ -212,8 +208,21 @@ stworzona została przykładowa wtyczka do programu *Claws Mail* [6]_.
 
 .. [6] http://www.claws-mail.org/
 
+
+.. page::
+
+
 Przetwarzanie wiadomości
 ========================
+
+Ważnym krokiem w procedurze klasyfikacji spamu jest parsowanie wiadomości
+e-mail. To w niej znajdziemy wszystkie informacje wymagane do poprawnego
+rozpoznania niechcianej wiadomości. Z tego powodu stworzenie sprawnie
+działającego parsera wiadomości jest bardzo ważne. Protokół e-mail
+posiada kilka mechanizmów, z którymi przy codziennym korzystaniu
+z poczty elektronicznej spotykamy się rzadko, a które często bywają
+wykorzystywane przez spamerów, w celu utrudnienia odczytu wiadomości
+przez filtry antyspamowe.
 
 Korpus wiadomości
 -----------------
@@ -253,7 +262,7 @@ Spam          1896
 
 .. class:: caption
 
-   **Tab. 2.1.** - Liczba wiadomości poszczególnych
+   **Tabela 2.1.** - Liczba wiadomości poszczególnych
    kategorii znajdujących się w korpusie
 
 Budowa wiadomości e-mail
@@ -293,7 +302,7 @@ Listing 2.1 zawiera przykładowy nagłówek.
 
 .. class:: caption
 
-   **Lis. 2.1.** - Przykładowy nagłówek wiadomości e-mail
+   **Listing 2.1.** - Przykładowy nagłówek wiadomości e-mail
 
 Ciało wiadomości to właściwa zawartość e-maila. Może być ono zapisane
 zarówno w języku znaczników jakim jest HTML, jak również jako
@@ -355,7 +364,7 @@ Listing 2.2 zawiera przykłady użycia tego nagłówka.
 
 .. class:: caption
 
-   **Lis. 2.2.** - Przykłady wykorzystania nagłówka ``Content-Type``
+   **Listing 2.2.** - Przykłady wykorzystania nagłówka ``Content-Type``
 
 Content-Transfer-Encoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -379,7 +388,7 @@ Listing 2.3 zawiera przykłady wykorzystania tego nagłówka.
 
 .. class:: caption
 
-   **Lis. 2.3.** - Przykłady wykorzystania
+   **Listing 2.3.** - Przykłady wykorzystania
    nagłówka ``Content-Transfer-Encoding``
 
 Subject
@@ -414,7 +423,7 @@ podanej strony kodowej.
 
 .. class:: caption
 
-   **Lis. 2.4.** - Przykłady wykorzystania nagłówka ``Subject``
+   **Listing 2.4.** - Przykłady wykorzystania nagłówka ``Subject``
 
 W listingu 2.4 widzimy, że
 w końcówkach niektórych tematów pojawiają się dodatkowe
@@ -453,7 +462,7 @@ zakodowanego z wykorzystaniem ``quoted-printable``.
 
 .. class:: caption
 
-   **Lis. 2.5.** - Fragment ciała wiadomości e-mail zakodowany przy
+   **Listing 2.5.** - Fragment ciała wiadomości e-mail zakodowany przy
    użyciu ``quoted-printable``
 
 Drugim spotykanym kodowaniem jest ``base64``. Jest to inny rodzaj kodowania,
@@ -564,7 +573,7 @@ Wartość ``boundary`` dla niej to ``BoundaryOfDocument``.
 
 .. class:: caption
 
-   **Lis. 2.6.** - Przykładowa wiadomość wieloczęściowa.
+   **Listing 2.6.** - Przykładowa wiadomość wieloczęściowa.
 
 Istotne cechy wiadomości
 ------------------------
@@ -665,7 +674,7 @@ Przykładową listę cech zamieszczono w listingu 2.7.
 
 .. class:: caption
 
-   **Lis. 2.7.** - Lista cech przykładowej wiadomości (nie zawarto
+   **Listing 2.7.** - Lista cech przykładowej wiadomości (nie zawarto
    cech uzyskanych poprzez wektoryzację tematu i tekstu
    wiadomości)
 
@@ -678,15 +687,33 @@ Przygotowanie danych wejściowych dla klasyfikatorów
 W uczeniu maszynowym, często stosuje się normalizację danych
 wejściowych. Ma to celu zwiększenie skuteczności działania systemów
 uczących się. W tym przypadku zastosowano skalowanie wartości
-cech do zakresu ``[0, 1]``. Typ i zakres normalizacji został
+cech do zakresu ``[0, 1]``. Taki typ i zakres normalizacji został
 wybrany ze względu na to, że produktem procesu wektoryzacji tekstu
 są macierze rzadkie, z wartościami nie mniejszymi niż 0.
 Taki proces normalizacji nie zaburzy rzadkości macierzy,
 co z kolei ułatwi przetrzymywanie takiej macierzy w pamięci
 operacyjnej.
 
+
+.. page::
+
+
 Algorytmy uczenia maszynowego
 =============================
+
+Po odczytaniu wiadomości i ekstrakcji ich cech przechodzimy do
+procesu uczenia. Problem rozpoznawania spamu jest problemem
+klasyfikacji, tj. sytuacji w której system uczy się rozróżniać,
+do której z dwóch lub więcej kategorii należy przedstawiany
+mu przykład (w tym przypadku przykładami są wiadomości).
+Dla tworzonego filtra istnieć będą 2 kategorie: wiadomość
+niespamowa i spam. W rozdziale tym przedstawione zostały algorytmy
+zajmujące się klasyfikacją, będą to:
+
+ * regresja logistyczna,
+ * naiwny klasyfikator bayesowski,
+ * maszyna wsparcia wektorowego,
+ * las drzew losowych.
 
 Kroswalidacja
 -------------
@@ -736,6 +763,8 @@ osiągnięto wysoką wydajność, natomiast dalsze zwiększanie wartości tych
 parametrów powodowałoby wydłużenie czasów treningu systemu i klasyfikacji
 wiadomości.
 
+.. page::
+
 =================================== ==================== ======================
 Parametry                           Średnie AUC          Odchylenie standardowe
 =================================== ==================== ======================
@@ -755,7 +784,7 @@ text_words=3000, subject_words=300  0.99885              0.00051
 
 .. class:: caption
 
-   **Tab. 3.1.** - Wyniki kroswalidacji dla doboru paramerów wektoryzacji;
+   **Tabela 3.1.** - Wyniki kroswalidacji dla doboru paramerów wektoryzacji;
    parametr ``text_words`` oznacza liczbę słów w tekście wiadomości,
    natomiast ``subject_words`` - liczbę słów w temacie wiadomości
 
@@ -765,7 +794,7 @@ text_words=3000, subject_words=300  0.99885              0.00051
 
 .. class:: caption
 
-   **Rys. 3.1.** - Krzywe ROC kroswalidacji dla wyboru parametrów
+   **Rysunek 3.1.** - Krzywe ROC kroswalidacji dla wyboru parametrów
    wektoryzacji
 
 Regresja logistyczna
@@ -802,7 +831,7 @@ C=5                                 0.99883              0.00060
 
 .. class:: caption
 
-   **Tab. 3.2.** - Wyniki kroswalidacji dla regresji logistycznej
+   **Tabela 3.2.** - Wyniki kroswalidacji dla regresji logistycznej
 
 .. image:: charts/ROC_LogisticRegression.png
    :width: 85%
@@ -810,7 +839,7 @@ C=5                                 0.99883              0.00060
 
 .. class:: caption
 
-   **Rys. 3.2.** - Krzywe ROC dla regresji logistycznej
+   **Rysunek 3.2.** - Krzywe ROC dla regresji logistycznej
 
 .. [10] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
    The Elements of Statistical Learning, 2009
@@ -842,7 +871,7 @@ alpha=0.1                           0.99655              0.00086
 
 .. class:: caption
 
-   **Rys. 3.2.** - Wyniki kroswalidacji dla naiwnego klasyfikatora
+   **Tabela 3.3.** - Wyniki kroswalidacji dla naiwnego klasyfikatora
    bayesowskiego
 
 .. image:: charts/ROC_NaiveBayes.png
@@ -851,7 +880,7 @@ alpha=0.1                           0.99655              0.00086
 
 .. class:: caption
 
-   **Rys. 3.2.** - Krzywe ROC dla naiwnego klasyfikatora
+   **Rysunek 3.3.** - Krzywe ROC dla naiwnego klasyfikatora
    bayesowskiego
 
 Maszyna wsparcia wektorowego
@@ -898,7 +927,9 @@ C=0.5                               0.99677              0.00043
 
 .. class:: caption
 
-   **Tab. 3.3.** - Wyniki kroswalidacji dla liniowego SVM
+   **Tabela 3.3.** - Wyniki kroswalidacji dla liniowego SVM
+
+.. page::
 
 ================================= ====================== ======================
 Parametry                         Średnie AUC            Odchylenie standardowe
@@ -917,7 +948,7 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
 .. class:: caption
 
-   **Tab. 3.4.** - Wyniki kroswalidacji dla SVM z jądrem RBF
+   **Tabela 3.4.** - Wyniki kroswalidacji dla SVM z jądrem RBF
 
 .. image:: images/SVM_hyperplane_stripped.png
    :width: 65%
@@ -925,7 +956,7 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
 .. class:: caption
 
-   **Rys. 3.3.** - Przykład rodzielenia dwóch kategorii danych
+   **Rysunek 3.3.** - Przykład rodzielenia dwóch kategorii danych
    przez SVM (Źródło: Wikipedia)
 
 .. image:: charts/ROC_SVM-linear.png
@@ -934,7 +965,7 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
 .. class:: caption
 
-   **Rys. 3.4.** - Krzywe ROC dla liniowego SVM
+   **Rysunek 3.4.** - Krzywe ROC dla liniowego SVM
 
 .. image:: charts/ROC_SVM-rbf.png
    :width: 85%
@@ -942,7 +973,7 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
 .. class:: caption
 
-   **Rys. 3.5.** - Krzywe ROC dla SVM z jądrem RBF
+   **Rysunek 3.5.** - Krzywe ROC dla SVM z jądrem RBF
 
 Las drzew losowych
 ------------------
@@ -978,7 +1009,7 @@ n_estimators=100                    0.99765              0.00049
 
 .. class:: caption
 
-   **Tab. 3.5.** - Wyniki kroswalidacji dla lasów drzew losowych
+   **Tabela 3.5.** - Wyniki kroswalidacji dla lasów drzew losowych
 
 .. image:: charts/ROC_RandomForest.png
    :width: 85%
@@ -986,7 +1017,7 @@ n_estimators=100                    0.99765              0.00049
 
 .. class:: caption
 
-   **Rys. 3.6.** - Krzywa ROC dla lasu drzew losowych
+   **Rysunek 3.6.** - Krzywa ROC dla lasu drzew losowych
 
 
 Porównanie efektywności klasyfikatorów
@@ -997,7 +1028,7 @@ logistyczna. Pozostałe algorytmy uzyskały zbliżone do siebie wyniki.
 Lepszy wynik mogłaby uzyskać maszyna wsparcia wektorowego, jednakże,
 ze względu na długi czas obliczeń, algorytm ten pracował na mniejszej
 ilości danych (zmniejszenie parametrów wektoryzacji tekstu). Szczegółowe
-porównanie znajduje się w tabeli 3.x i na rysunku 3.x.
+porównanie znajduje się w tabeli 3.6 i na rysunku 3.7.
 
 ======================= ================== ================== ======================
 Algorytm                Parametry          Średnie AUC        Odchylenie standardowe
@@ -1011,7 +1042,7 @@ Las drzew losowych      n_estimators=100     0.99765          0.00049
 
 .. class:: caption
 
-   **Tab. 3.6.** - Porównawczy wynik wszystkich testowanych algorytmów
+   **Tabela 3.6.** - Porównawczy wynik wszystkich testowanych algorytmów
 
 .. image:: charts/ROC_ALL.png
    :width: 85%
@@ -1019,11 +1050,22 @@ Las drzew losowych      n_estimators=100     0.99765          0.00049
 
 .. class:: caption
 
-   **Rys. 3.7.** - Zbiór krzywych ROC poszczególnych algorytmów
+   **Rysunek 3.7.** - Zbiór krzywych ROC poszczególnych algorytmów
+
+
+.. page::
 
 
 Integracja z programem pocztowym
 ================================
+
+Aby filtr antyspamowy mógł zostać zostać wykorzystany do ochrony
+skrzynek użytkowników przed niechcianymi wiadomościami, musi mieć
+on możliwość współpracy z programami pocztowymi. W dalszej części
+tego rozdziału zaprezentowany zostanie protokół używany przez
+tworzony w tej pracy filtr antyspamowy. Zademonstrowana zostanie
+również przykładowe rozszerzenie dla programu pocztowego,
+korzystające z tego protokołu.
 
 Protokół komunikacji
 --------------------
@@ -1078,7 +1120,7 @@ Po uruchomieniu skrypt wykonuje następujące kroki:
 #. Po sprawdzeniu wszystkich wiadomości wyświetlone zostaje podsumowanie o
    liczbie wiadomości, które zostały rozpoznane jako spam.
 
-Uruchomienie i efekt działania skryptu widoczne są na rysunkach 5.1 i 5.2.
+Uruchomienie i efekt działania skryptu widoczne są na rysunkach 4.1 i 4.2.
 
 .. image:: images/plugin1_c.png
    :width: 85%
@@ -1086,7 +1128,7 @@ Uruchomienie i efekt działania skryptu widoczne są na rysunkach 5.1 i 5.2.
 
 .. class:: caption
 
-   **Rys. 4.1.** - Wywołanie skryptu sprawdzającego wiadomości e-mail
+   **Rysunek 4.1.** - Wywołanie skryptu sprawdzającego wiadomości e-mail
 
 .. image:: images/plugin2_c.png
    :width: 85%
@@ -1094,7 +1136,10 @@ Uruchomienie i efekt działania skryptu widoczne są na rysunkach 5.1 i 5.2.
 
 .. class:: caption
 
-   **Rys. 4.2.** - Efekt działania skryptu sprawdzającego wiadomości e-mail
+   **Rysunek 4.2.** - Efekt działania skryptu sprawdzającego wiadomości e-mail
+
+
+.. page::
 
 
 Podsumowanie i możliwości rozbudowy
@@ -1136,6 +1181,10 @@ sprawdzanych byłoby jednocześnie, warto tą funkcję rozbudować.
 
 
 .. [12] http://en.wikipedia.org/wiki/Stemming
+
+
+.. page::
+
 
 Bibliografia
 ============
