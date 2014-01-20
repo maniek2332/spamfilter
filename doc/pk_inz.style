@@ -40,11 +40,13 @@ styles:
         parent: bodytext
         alignment: left
         firstLineIndent: 0
-        fontName: stdItalic
+        fontName: "FreeSerif-Oblique"
     code:
         keepWithNext: true
+    footnote:
+        fontSize: 30
 
-linkColor: black
+#linkColor: black
 
 pageSetup:
     firstTemplate: coverPage

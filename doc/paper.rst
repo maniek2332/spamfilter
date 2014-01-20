@@ -32,56 +32,55 @@ drogą elektroniczną niechciane wiadomości - spam. Wykorzystują oni
 wiadomości e-mail między innymi do rozsyłania treści reklamowych.
 
 Istnieje wiele
-różnych sposobów obrony przed spamem. Tym któremu poświęcona będzie ta
-praca jest stworzenie systemu, zdolnego nauczyć się rozróżniać
+różnych sposobów obrony przed spamem. Tym, któremu poświęcono tą
+prace jest stworzenie systemu, zdolnego nauczyć się rozróżniać
 wiadomości spamowe od niespamowych. Technologią, która
-zapewni możliwość uczenia się, będzie uczenie maszynowe.
-Stworzony zostanie system, zdolny do rozróżnienia czy
-dana wiadomość jest spamem, czy też nie (system ten oczywiście
-nie będzie miał stuprocentowej skuteczności). Do nauki wykorzystany
-zostanie publicznie dostępny korpus wiadomości e-mail.
+zapewnia możliwość uczenia się takiego systemu, jest uczenie maszynowe.
+Do nauki wykorzystano
+publicznie dostępny korpus wiadomości e-mail.
 
 W dalszej części tego rozdziału opisane zostały szczegółowe cele
-pracy, przybliżone zostanie pojęcie uczenia maszynowego i narzędzia
-z nim związane. Opisana została również budowa filtra antyspamowego
+pracy, przybliżone zostało pojęcie uczenia maszynowego i narzędzia
+z nim związane. Opisano również budowę filtra antyspamowego
 będącego tematem tej pracy.
 
 W drugim rozdziale przedstawiony został
-korpus wiadomości jaki był wykorzystywany przy trenowaniu i testowaniu
-owego filtra. Przybliżona została struktura wiadomości e-mail, oraz
-techniczne szczegóły na które należy zwrócić uwagę przy przetwarzaniu
-wiadomości. Opisane zostały cechy wiadomości według których uczyć
-się będzie filtr oraz mechanizmy które cechy te przetwarzają, tak
+korpus wiadomości, jaki był wykorzystywany przy trenowaniu i testowaniu
+owego filtra. Przybliżono strukturę wiadomości e-mail, oraz
+techniczne szczegóły, na które należy zwrócić uwagę przy przetwarzaniu
+wiadomości. Opisane zostały cechy wiadomości, według których uczyć
+się będzie filtr oraz mechanizmy, które cechy te przetwarzają, tak
 aby skorzystać z nich mogły algorytmy uczenia maszynowego.
 
-W rozdziale trzecim opisane zostały algorytmy uczenia maszynowego,
-oraz efekty ich nauki.
+W rozdziale trzecim opisano algorytmy uczenia maszynowego,
+proces ich uczenia oraz efekty ich nauki.
 Przedstawione zostały także mechanizmy związane z ich testowaniem
 i wizualizacją efektywności. Znalazło się tam również zbiorcze
 porównanie skuteczności poszczególnych algorytmów.
 
 Rozdział czwarty poświęcony został zagadnieniu integracji tworzonego
-filtra antyspamowego z klientami poczty elektronicznej. Został
-opisany stworzony protokół komunikacji i zademonstrowana został
-przykładowa wtyczka dokonująca takiej integracji.
+filtra antyspamowego z klientami poczty elektronicznej.
+Opisano stworzony protokół komunikacji i zademonstrowana została
+przykładowa wtyczka do programu pocztowego,
+dokonująca takiej integracji.
 
-Piąty rozdział został poświęcony podsumowaniu pracy i propozycjom
+Piąty rozdział poświęcono na podsumowanie pracy i propozycje
 jej dalszego rozwoju.
 
 Cel pracy
 ---------
 
-Celem pracy jest stworzenie systemu antyspamowego. Zadaniem systemu
+Celem pracy było stworzenie systemu filtra antyspamowego. Zadaniem systemu
 jest:
 
 #. Poprawne wczytanie i przetworzenie dowolnej wiadomości e-mail.
-#. Nauka klasyfikacji spamu na podstawie danych treningowych
+#. Nauka klasyfikacji spamu na podstawie danych treningowych.
 #. Udostępnienie interfejsu pozwalającego zewnętrznym aplikacjom na
    sklasyfikowanie e-maili.
 
-Przy klasyfikacji system skupiać się będzie przede wszystkim na treści
+Przy klasyfikacji system skupia się przede wszystkim na treści
 wiadomości. Informacje takie jak adres nadawcy lub adres serwera,
-z którego wiadomość nadeszła nie będą brane pod uwagę.
+z którego wiadomość nadeszła nie są brane pod uwagę.
 
 Uczenie maszynowe
 -----------------
@@ -112,7 +111,8 @@ pracy, zostały wykonane na komputerze o parametrach:
 Biblioteka scikit-learn
 -----------------------
 
-Znana również pod nazwami *scikits.learn* i *sklearn*, jest
+Biblioteka *scikit-learn* [2]_,
+znana również pod nazwami *scikits.learn* i *sklearn*, jest
 open-source'ową biblioteką przeznaczoną dla języka programowania
 Python. Dostarcza wiele algorytmów uczenia maszynowego do klasyfikacji,
 regresji i grupowania danych. Prócz tego biblioteka zawiera również
@@ -124,16 +124,17 @@ funkcje pomocnicze służące między innymi do:
 
 Dla algorytmów takich jak regresja logistyczna i
 maszyna wsparcia wektorowego *scikit-learn*
-wykorzystuje zewnętrzne biblioteki *LIBLINEAR* [2]_ i *LIBSVM* [3]_,
+wykorzystuje zewnętrzne biblioteki *LIBLINEAR* [3]_ i *LIBSVM* [4]_,
 co zapewnia wysoką wydajność obliczeń.
 
-.. [2] http://www.csie.ntu.edu.tw/~cjlin/liblinear/
-.. [3] http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+.. [2] http://scikit-learn.org/
+.. [3] http://www.csie.ntu.edu.tw/~cjlin/liblinear/
+.. [4] http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
 Elementy projektu
 -----------------
 
-W filtrze antyspamowym będącym tematem tej pracy możemy wyszczególnić
+W filtrze antyspamowym, będącym tematem tej pracy, znajdują się
 następujące elementy:
 
 Parser wiadomości e-mail
@@ -152,33 +153,28 @@ Na parsowanie HTMLa składa się:
 
 #. Przetworzenie ciała do prostego tekstu (plaintext).
 #. Podsumowanie liczby i typów tagów użytych w wiadomości.
-#. Podliczenie liczby błędów drzewa w wiadomości.
+#. Podliczenie liczby błędów, które pojawiły się w drzewie wiadomości.
 
-Parser stworzony został w oparciu o moduł *HTMLParser* [4]_ z
+Parser stworzony został w oparciu o moduł *HTMLParser* [5]_ z
 biblioteki standardowej języka Python.
 
-.. [4] http://docs.python.org/2/library/htmlparser.html
-
-..
-    Sam parser ma postać modułu języka Python. Pozwala to na łatwe
-    połączenie go z pozostałymi elementami pracy inżynierskiej.
-    Po wczytaniu wiadomości możemy pobrać wszystkie zebrane informacje
-    z wewnętrznej obiektowej struktury modułu.
+.. [5] http://docs.python.org/2/library/htmlparser.html
 
 Ekstraktor cech
 ~~~~~~~~~~~~~~~
 
 Po wczytaniu wiadomości należy przedstawić zawarte w niej informacje
-w formie numerycznej. Ekstraktor zajmuje się takimi zadaniami jak:
+(cechy wiadomości) w formie numerycznej.
+Ekstraktor zajmuje się takimi zadaniami jak:
 
 #. Zliczenie wystąpień słów w temacie wiadomości.
 #. Zliczenie wystąpień słów w ciele wiadomości.
 #. Zliczenie wystąpień linków i adresów w ciele wiadomości.
 
-Do zliczania słów wykorzystane zostały narzędzia [5]_ pochodzące
+Do zliczania słów wykorzystane zostały narzędzia [6]_ pochodzące
 z biblioteki *scikit-learn*.
 
-.. [5] http://scikit-learn.org/stable/modules/feature_extraction.html
+.. [6] http://scikit-learn.org/stable/modules/feature_extraction.html
 
 Klasyfikator
 ~~~~~~~~~~~~
@@ -195,7 +191,7 @@ Serwer HTTP
 Zadaniem serwera jest:
 
 #. Nasłuchiwanie żądań HTTP (ang. *Hypertext Transfer Protocol*)
-   z wiadomościami nadsyłanych przez programy pocztowe.
+   z wiadomościami nadsyłanymi przez programy pocztowe.
 #. Sprawdzenie w klasyfikatorze nadesłanej wiadomości.
 #. Odesłanie odpowiedzi zawierającej przewidywania klasyfikatora.
 
@@ -204,9 +200,9 @@ Wtyczka do programu pocztowego
 
 W celu demonstracji możliwości integracji filtra antyspamowego
 z klientami poczty,
-stworzona została przykładowa wtyczka do programu *Claws Mail* [6]_.
+stworzona została przykładowa wtyczka do programu *Claws Mail* [7]_.
 
-.. [6] http://www.claws-mail.org/
+.. [7] http://www.claws-mail.org/
 
 
 .. page::
@@ -216,11 +212,11 @@ Przetwarzanie wiadomości
 ========================
 
 Ważnym krokiem w procedurze klasyfikacji spamu jest parsowanie wiadomości
-e-mail. To w niej znajdziemy wszystkie informacje wymagane do poprawnego
+e-mail. To w jej treści znajdują się wszystkie informacje wymagane do poprawnego
 rozpoznania niechcianej wiadomości. Z tego powodu stworzenie sprawnie
 działającego parsera wiadomości jest bardzo ważne. Protokół e-mail
-posiada kilka mechanizmów, z którymi przy codziennym korzystaniu
-z poczty elektronicznej spotykamy się rzadko, a które często bywają
+posiada kilka mechanizmów, które przy codziennym korzystaniu
+z poczty elektronicznej są rzadko spotykane, a które często bywają
 wykorzystywane przez spamerów, w celu utrudnienia odczytu wiadomości
 przez filtry antyspamowe.
 
@@ -228,11 +224,11 @@ Korpus wiadomości
 -----------------
 
 W projekcie wykorzystana została baza wiadomości
-używana w projekcie *SpamAssasin* [7]_. Znajdujące się
+używana w projekcie *SpamAssasin* [8]_. Znajdujące się
 w niej wiadomości pochodzą z różnych źródeł, są to między innymi
 publiczne fora, newslettery stron internetowych oraz skrzynki pocztowe
-osób zaangażowanych w tworzenie korpusu [8]_. Wśród znajdujących
-się w tej bazie e-maili możemy wyróżnić następujące kategorie:
+osób zaangażowanych w tworzenie korpusu [9]_. Wśród znajdujących
+się w tej bazie e-maili można wyróżnić następujące kategorie:
 
  * **Spam** - wiadomości spamowe, żadne z tych wiadomości nie pochodzą
    z pułapek na spam - to znaczy - zostały wysłane na adresy e-mailowe
@@ -248,8 +244,8 @@ się w tej bazie e-maili możemy wyróżnić następujące kategorie:
    poszczególnych kategoriach.
 
 
-.. [7] http://spamassassin.apache.org/
-.. [8] http://spamassassin.apache.org/publiccorpus/readme.html
+.. [8] http://spamassassin.apache.org/
+.. [9] http://spamassassin.apache.org/publiccorpus/readme.html
 
 ============= =================
 Kategoria     Liczba wiadomości
@@ -372,10 +368,10 @@ Content-Transfer-Encoding
 Nagłówek ten opisuje jak zakodowane są dane w ciele wiadomości.
 W przypadku wiadomości e-mail można spodziewać kodowań:
 
-* ``7bit`` - dane tekstowe zakodowane tylko na 7 bitach (ASCII).
-* ``8bit`` - dane tekstowe zakodowane na 8 bitach (inne strony kodowe).
-* ``quoted-printable`` - dane zakodowane kodowaniem ``quoted-printable``
-* ``base64`` - dane zakodowane za pomocą ``base64``
+* ``7bit`` - dane tekstowe zakodowane tylko na 7 bitach (ASCII),
+* ``8bit`` - dane tekstowe zakodowane na 8 bitach (inne strony kodowe),
+* ``quoted-printable`` - dane zakodowane kodowaniem ``quoted-printable``,
+* ``base64`` - dane zakodowane za pomocą ``base64``.
 
 Listing 2.3 zawiera przykłady wykorzystania tego nagłówka.
 
@@ -396,7 +392,7 @@ Subject
 
 W nagłówku tym zapisany jest temat wiadomości. Domyślnie nagłówek
 ten zawiera tylko znaki ASCII. Jednak tutaj podobnie
-jak w ciele wiadomości spotkać się możemy z różnymi stronami kodowymi i
+jak w ciele wiadomości spotkać się można z różnymi stronami kodowymi i
 kodowaniami. Jeśli nagłówek jest dodatkowo zakodowany przyjmuje
 on postać:
 
@@ -407,8 +403,8 @@ on postać:
   ``Q`` to ``quoted-printable``, ``B`` to ``base64``,
 * ``zakodowany_temat`` to zakodowany temat wiadomości.
 
-W celu odczytania takiego tematu najpierw dekodujemy ``zakodowany_temat``
-używając właściwego kodowania, a na końcu odczytujemy go przy pomocy
+W celu odczytania takiego tematu najpierw dekodowany jest ``zakodowany_temat``
+używając właściwego kodowania, a następnie odczytywany jest przy pomocy
 podanej strony kodowej.
 
 ::
@@ -425,7 +421,7 @@ podanej strony kodowej.
 
    **Listing 2.4.** - Przykłady wykorzystania nagłówka ``Subject``
 
-W listingu 2.4 widzimy, że
+W listingu 2.4 można zauważyć, że
 w końcówkach niektórych tematów pojawiają się dodatkowe
 nieznaczące znaki. Jest to technika używana przez spamerów mająca
 na celu zmylenie prostych filtrów antyspamowych, które sprawdzają
@@ -436,8 +432,8 @@ tematu wiadomości z zebraną wcześniej bazą spamu.
 Dekodowanie ciała wiadomości
 ----------------------------
 
-W wiadomościach e-mail spotykamy się z dwoma różnorodnymi kodowaniami
-(nie liczymy tutaj kodowań podstawowych ``7bit`` i ``8bit``).
+W wiadomościach e-mail spotkać się można z dwoma różnorodnymi kodowaniami
+(nie licząc kodowań podstawowych ``7bit`` i ``8bit``).
 Jedno z nich to ``quoted-printable``. Jest to stosunkowo proste kodowanie,
 które zapisuje bajty o wartości większej od 127, bajty będące kodami sterującymi
 ASCII oraz znak ``=`` zapisując każdy z tych bajtów jako wartość
@@ -480,10 +476,10 @@ Tekst "Ala ma kota" zapisany w ``base64`` wygląda następująco:
 | ``QWxhIG1hIGtvdGE=``
 
 Aby wiadomość mogła być prawidłowo wyświetlona musi zostać ona wczytana
-przy pomocy odpowiedniej strony kodowej. Strona kodowa jakiej potrzebujemy
+przy pomocy odpowiedniej strony kodowej. Wymagana strona kodowa
 zadeklarowana jest w nagłówku ``Content-Type`` jako ``charset``.
 Przy przetwarzaniu tekstu może się zdarzyć sytuacja, że bajt, który
-przetwarzamy nie został przewidziany w stronie kodowej. W takim przypadku
+jest przetwarzany nie został przewidziany w stronie kodowej. W takim przypadku
 bajt taki jest ignorowany.
 
 
@@ -516,10 +512,10 @@ Wiadomości wieloczęściowe
 -------------------------
 
 Jak już wcześniej wspomniano niektóre wiadomości mają formę wieloczęściową.
-Takie e-maile rozpoznajemy po typie ``multipart/`` zawartym w nagłówku
+Takie e-maile rozpoznać można po typie ``multipart/`` zawartym w nagłówku
 ``Content-Type``. Wówczas nagłówek ten zawiera również wartość ``boundary``,
 która posłuży do podzielenia wiadomości. Przykładowo jeśli nasze ``boundary``
-przyjmuje wartość ``QWERTY`` to separatory jakich szukamy w dokumencie
+przyjmuje wartość ``QWERTY`` to separatory w dokumencie
 mają wartość ``--QWERTY``. Wyjątkiem jest tu ostatni separator,
 jego wartość to ``--QWERTY--``. Wszystkie informacje zawarte przed
 pierwszym i za ostatnim separatorem zostają zignorowane.
@@ -580,7 +576,7 @@ Istotne cechy wiadomości
 
 Najważniejszym krokiem podczas tworzenia systemu
 antyspamowego było pobranie odpowiednich cech z wiadomości.
-Informacje zawarte w wiadomości, na które zwracamy uwagę
+Informacje zawarte w wiadomości, na które zwraca uwagę filtr,
 to przede wszystkim temat wiadomości i jej treść.
 Innymi ważnymi cechami jest pokrycie tekstu wiadomości
 tagami wyróżniającymi. Ma to na celu zwrócenie szczególnej
@@ -588,18 +584,18 @@ uwagi na wiadomości gdzie spora część tekstu miała
 na celu przykucie uwagi odbiorcy.
 
 Algorytmy uczenia maszynowego wymagają, aby ich dane wejściowe
-były danymi numerycznymi. Nie jest to problemem dla danych,
+były danymi numerycznymi. Nie jest to problemem dla danych
 takich jak liczba użytych tagów, czy procentowe pokrycie
-tekstu danym tagiem. Jednakże, danych tekstowych nie możemy
+tekstu danym tagiem. Jednakże, danych tekstowych nie można
 przekazać do algorytmów w bezpośredniej formie. W tym celu
-zamieniamy je na dane numeryczne, proces ten zwany jest
+zamieniane są na dane numeryczne, proces ten zwany jest
 wektoryzacją. Polega on
-na zliczeniu wystąpień najczęściej występujących ``N``
+na zliczeniu wystąpień ``N`` najczęściej występujących
 słów, we wszystkich przetwarzanych e-mailach. Efektem takiego
 działania będzie macierz o wymiarze :math:`M \times N`, gdzie
 :math:`M` jest liczbą przetwarzanych tekstów. Macierz ta
 będzie macierzą rzadką. Wartość :math:`N`, będąca liczbą
-najpopularniejszych słów jakie chcemy zliczyć, była dobierana
+najpopularniejszych słów jakie zliczamy, była dobierana
 eksperymentalnie, testowane były różne warianty.  
 Wektoryzacja ta została zastosowana do przetworzenia tematów
 wiadomości.
@@ -609,7 +605,7 @@ została inna forma zliczania słów, mianowicie TF-IDF
 (ang. TF - term frequency, IDF - inverse document frequency).
 Użycie tej techniki sprawia, że mniejsza waga zostaje
 przypisana do słów popularnych w wielu wiadomościach,
-np. przyimków [9]_. Podobnie jak przy wektoryzacji
+np. przyimków [10]_. Podobnie jak przy wektoryzacji
 zliczającej słowa, tutaj także liczba najpopularniejszych
 słów - :math:`N` - była wybierana eksperymentalnie.
 
@@ -678,7 +674,7 @@ Przykładową listę cech zamieszczono w listingu 2.7.
    cech uzyskanych poprzez wektoryzację tematu i tekstu
    wiadomości)
 
-.. [9] Manning, C. D.; Raghavan, P.; Schutze, H. (2008).
+.. [10] Manning, C. D.; Raghavan, P.; Schutze, H. (2008).
    "Scoring, term weighting, and the vector space model"
 
 Przygotowanie danych wejściowych dla klasyfikatorów
@@ -701,14 +697,14 @@ operacyjnej.
 Algorytmy uczenia maszynowego
 =============================
 
-Po odczytaniu wiadomości i ekstrakcji ich cech przechodzimy do
+Po odczytaniu wiadomości i ekstrakcji ich cech można przejść do
 procesu uczenia. Problem rozpoznawania spamu jest problemem
 klasyfikacji, tj. sytuacji w której system uczy się rozróżniać,
 do której z dwóch lub więcej kategorii należy przedstawiany
 mu przykład (w tym przypadku przykładami są wiadomości).
 Dla tworzonego filtra istnieć będą 2 kategorie: wiadomość
 niespamowa i spam. W rozdziale tym przedstawione zostały algorytmy
-zajmujące się klasyfikacją, będą to:
+zajmujące się klasyfikacją, są to:
 
  * regresja logistyczna,
  * naiwny klasyfikator bayesowski,
@@ -801,19 +797,19 @@ Regresja logistyczna
 --------------------
 
 Regresja logistyczna jest uogólnionym modelem liniowym klasyfikacji danych.
-Dzięki wykorzystaniu funkcji logistycznej wartość przewidywana przez
-ten model zawiera się w przedziale :math:`0 \leq p \leq 1` [10]_.
+Dzięki wykorzystaniu funkcji logistycznej, wartość przewidywana przez
+ten model zawiera się w przedziale ``[0, 1]`` [11]_.
 
-Jednym z parametrów regresji logistycznej jakim możemy manipulować
-jest ``C``, parametr ten odpowiedzialny jest za regularyzację.
-Regularyzacja ma na celu zapobieganie sytuacji w której algorytm
+Jednym z parametrów regresji logistycznej jakim można manipulować
+jest ``C``. Parametr ten odpowiedzialny jest za regularyzację.
+Regularyzacja ma na celu zapobieganie sytuacji, w której algorytm
 nadmiernie dopasuje (ang *overfitting*) się do danych treningowych,
-co obniży jego efektywność dla danych testowych [10]_. Im mniejsza
+co obniży jego efektywność dla danych testowych [11]_. Im mniejsza
 wartość ``C``, tym regularyzacja będzie silniejsza.
 
 Tabela 3.2 i rysunek 3.2 przedstawiają wyniki kroswalidacji
 dla regresji logistycznej, z użyciem różnych wartości parametru ``C``.
-Z wyników tych możemy wywnioskować, że optymalna wartość ``C``
+Z wyników tych można wywnioskować, że optymalna wartość ``C``
 zawiera się wa zakresie ``[3.5, 7.5]``.
 Przeciętny czas treningu wyniósł 30 sekund.
 
@@ -841,7 +837,7 @@ C=5                                 0.99883              0.00060
 
    **Rysunek 3.2.** - Krzywe ROC dla regresji logistycznej
 
-.. [10] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
+.. [11] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
    The Elements of Statistical Learning, 2009
 
 Naiwny klasyfikator bayesowski
@@ -849,12 +845,12 @@ Naiwny klasyfikator bayesowski
 
 Klasyfikator bayesowski jest techniką uczenia maszynowego
 stosującą twierdzenie Bayesa do przetwarzanych danych.
-Nazywa się go naiwnym, ponieważ zakładamy, że wszystkie
+Nazywa się go naiwnym, ponieważ zakłada on, że wszystkie
 przetwarzane cechy są od siebie niezależne. Mimo, że
 założenie to zwykle nie jest spełnione, algorytm
-wciąż jest skuteczny [10]_.
+wciąż jest skuteczny [11]_.
 
-Parametrem jaki kontrolujemy jest tutaj wygładzanie
+Parametrem jaki można kontrolować jest tutaj wygładzanie
 Laplace'a - ``alpha``. Wyniki kroswalidacji znajdują się
 w tabeli 3.3 i na rysunku 3.3. Średni czas treningu wynosił
 25 sekund.
@@ -893,10 +889,10 @@ dane jako punkty w przestrzeni (wymiar tej przestrzeni jest
 równy liczbie cech danych wejściowych). Celem algorytmu
 jest rozdzielenie przykładów należących do różnych kategorii,
 za pomocą hiperpłaszczyzny, będącej w największym możliwym
-odstępie od punktów które oddziela (przykład takiego
+odstępie od punktów, które oddziela (przykład takiego
 podziału znajduje się na rysunku 3.3). Ponadto, dzięki
 zastosowaniu funkcji jąder, SVM może zostać zastosowany
-do nieliniowej klasyfikacji [10]_.
+do nieliniowej klasyfikacji [11]_.
 
 Przetestowane zostały dwie wersje SVM:
 
@@ -906,7 +902,7 @@ Przetestowane zostały dwie wersje SVM:
    funkcji jądra jest ``sigma``; wyniki w tabeli 3.4 i
    na rysunku 3.5.
 
-Podobnie jak regresji logistycznej, parametrem jest
+Podobnie jak w regresji logistycznej, parametrem jest
 tu ``C``, odpowiedzialne za regularyzacje. Ze względu na długi
 czas obliczeń, zdecydowano się zmniejszyć parametry wektoryzacji,
 zastosowano: ``text_words=500, subject_words=50``. Przeciętny
@@ -957,7 +953,7 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 .. class:: caption
 
    **Rysunek 3.3.** - Przykład rodzielenia dwóch kategorii danych
-   przez SVM (Źródło: Wikipedia)
+   przez SVM [12]_
 
 .. image:: charts/ROC_SVM-linear.png
    :width: 85%
@@ -975,6 +971,8 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
    **Rysunek 3.5.** - Krzywe ROC dla SVM z jądrem RBF
 
+.. [12] http://en.wikipedia.org/wiki/Support_vector_machine
+
 Las drzew losowych
 ------------------
 
@@ -984,9 +982,9 @@ przystosowanych klasyfikatorów i połączenia ich w jeden
 klasyfikator. W przypadku Lasu drzew losowych, jako
 pomniejsze klasyfikatory wykorzystywane są drzewa decyzyjne.
 Świetnie nadają się do tego zadania, ze względu na ich
-możliwość uczenia się skomplikowanych relacji między cechami [10]_.
+możliwość uczenia się skomplikowanych relacji między cechami [11]_.
 
-W przypadku lasów losowych możemy decydować z ilu drzew
+W przypadku lasów losowych można decydować z ilu drzew
 składać się będzie las, odpowiedzialny jest za to parametr
 ``n_estimators``. Efektywność lasów, w zależności
 od liczby drzew przedstawiono w tabeli 3.5 i na rysunku 3.6.
@@ -1062,15 +1060,15 @@ Integracja z programem pocztowym
 Aby filtr antyspamowy mógł zostać zostać wykorzystany do ochrony
 skrzynek użytkowników przed niechcianymi wiadomościami, musi mieć
 on możliwość współpracy z programami pocztowymi. W dalszej części
-tego rozdziału zaprezentowany zostanie protokół używany przez
-tworzony w tej pracy filtr antyspamowy. Zademonstrowana zostanie
+tego rozdziału zaprezentowany został protokół używany przez
+tworzony w tej pracy filtr antyspamowy. Zademonstrowano
 również przykładowe rozszerzenie dla programu pocztowego,
 korzystające z tego protokołu.
 
 Protokół komunikacji
 --------------------
 
-Założeniem projektu jest umożliwienie dowolnemu klientowi poczty
+Założeniem projektu było umożliwienie dowolnemu klientowi poczty
 na korzystanie z filtra antyspamowego. W tym celu zastosowano
 komunikację bazującą na protokole sieciowym, a dokładniej
 protokole HTTP. Klient chcąc sprawdzić czy dana wiadomość jest
@@ -1079,7 +1077,7 @@ otrzymuje wartość logiczną (prawda lub fałsz) mówiącą, czy wiadomość
 została uznana za spam.
 
 Serwer działa na porcie ``2220``. Oczekuje na wiadomości w formie
-surowej, wysłane z użyciem metody ``PUT`` [11]_ protokołu HTTP.
+surowej, wysłane z użyciem metody ``PUT`` [13]_ protokołu HTTP.
 Po otrzymaniu takiej wiadomości serwer podejmuje następujące
 działania:
 
@@ -1092,7 +1090,7 @@ działania:
    pustą odpowiedź z kodem HTTP ``221``, w przeciwnym wypadku
    zwróci pustą odpowiedź z kodem ``220``.
 
-.. [11] http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+.. [13] http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
    Sekcja 9.6.
 
 Wtyczka do klienta poczty
@@ -1166,7 +1164,7 @@ stworzona została prosta wtyczka do klienta poczty *Claws-Mail*.
 
 W przypadku dalszego rozwoju, warto rozważyć szukanie i tworzenie nowych
 cech wiadomości, a także przetestowanie innych algorytmów uczenia maszynowego.
-Godnym uwagi jest również zastosowanie stemmingu [12]_ do przetworzenie
+Godnym uwagi jest również zastosowanie stemmingu [14]_ do przetworzenie
 słów wiadomości do formy podstawowej. W przypadku rozbudowy parsera
 wiadomości, warto rozważyć implementacje skuteczniejszego parsowania
 treści HTML, a dokładniej użytych w nich arkuszy stylów CSS
@@ -1180,7 +1178,7 @@ W przypadku wykorzystania filtra w środowisku gdzie wiele wiadomości
 sprawdzanych byłoby jednocześnie, warto tą funkcję rozbudować.
 
 
-.. [12] http://en.wikipedia.org/wiki/Stemming
+.. [14] http://en.wikipedia.org/wiki/Stemming
 
 
 .. page::
@@ -1188,7 +1186,3 @@ sprawdzanych byłoby jednocześnie, warto tą funkcję rozbudować.
 
 Bibliografia
 ============
-
-.. Ogólne notatki
-
-   * pokazać przykładowe dane wyciągnięte przez parser wiadomości
