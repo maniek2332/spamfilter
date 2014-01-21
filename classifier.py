@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
+import numbers
 from collections import defaultdict
 
 import numpy as np
+import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 #from sklearn.grid_search import GridSearchCV
@@ -23,12 +26,16 @@ from datasets import TRAIN_ALL, TEST_ALL, COMPLETE_ALL
 from utils import linestyles_gen
 
 
-class Score(object):
-    def __init__(self, thresholds, fpr, tpr, auc):
+class Score(numbers.Number):
+    def __init__(self, thresholds, fpr, tpr, auc, _number=None):
         self.thresholds = thresholds
         self.fpr = fpr
         self.tpr = tpr
         self.auc = auc
+        if _number is not None:
+            self._number = _number
+        else:
+            self._number = auc
 
     def interpolate(self, target_thresholds):
         return Score(
@@ -41,6 +48,110 @@ class Score(object):
         plt.plot(self.fpr, self.tpr, color=lc, label=label,
                  ls=ls, lw=1.8, alpha=0.6)
         plt.fill_between(self.fpr, self.tpr, alpha=fill_alpha)
+
+    def as_dataframe(self):
+        df = pd.DataFrame(
+            data=[self.thresholds, self.fpr.tolist(), self.tpr.tolist()],
+            index=['thresholds', 'fpr', 'tpr'],
+        )
+        return df.T
+
+    def to_csv(self, path_or_buf):
+        df = self.as_dataframe()
+        df.to_csv(path_or_buf, index=False)
+
+    @classmethod
+    def read_csv(self, path_or_buf):
+        return pd.read_csv(path_or_buf, index_col=False)
+
+    @property
+    def dtype(self):
+        return np.dtype(self.__class__)
+
+    def copy(self):
+        return self.__class__(self.thresholds, self.fpr,
+                              self.tpr, self.auc, self._number)
+
+    def __iadd__(self, other):
+        if isinstance(other, Score):
+            self._number += other._number
+        else:
+            self._number += other
+        return self
+
+    def __add__(self, other):
+        score = self.copy()
+        score += other
+        return score
+
+    def __radd__(self, other):
+        score = self.copy()
+        score._number = other
+        score += self
+        return score
+
+    def __isub__(self, other):
+        if isinstance(other, Score):
+            self._number -= other._number
+        else:
+            self._number -= other
+        return self
+
+    def __sub__(self, other):
+        score = self.copy()
+        score -= other
+        return score
+
+    def __rsub__(self, other):
+        score = self.copy()
+        score._number = other
+        score -= self
+        return score
+
+    def __imul__(self, other):
+        if isinstance(other, Score):
+            self._number *= other._number
+        else:
+            self._number *= other
+        return self
+
+    def __mul__(self, other):
+        score = self.copy()
+        score *= other
+        return score
+
+    def __rmul__(self, other):
+        score = self.copy()
+        score._number = other
+        score *= self
+        return score
+
+    def __idiv__(self, other):
+        if isinstance(other, Score):
+            self._number /= other._number
+        else:
+            self._number /= other
+        return self
+
+    def __div__(self, other):
+        score = self.copy()
+        score /= other
+        return score
+
+    def __rdiv__(self, other):
+        score = self.copy()
+        score._number = other
+        score /= self
+        return score
+
+    def __itruediv__(self, other):
+        return self.__idiv__(other)
+
+    def __truediv__(self, other):
+        return self.__div__(other)
+
+    def __rtruediv__(self, other):
+        return self.__rdiv__(other)
 
 
 def scores_mean(scores):
@@ -58,7 +169,7 @@ class ROCScorer(object):
     def __init__(self, params_names):
         self.params_names = params_names
         self.scores = defaultdict(list)
-        self.interp_thresholds = set()
+        self.interp_thresholds = {0., 1.}
 
     @property
     def interp_scores(self):
@@ -156,6 +267,17 @@ def logistic_regression():
     model.plot_roc_curve(test_mails, TEST_ALL['label'])
 
 
+def save_grid_test_result(clf, params, score, scores_dir="doc/scores"):
+    fname = "%s__%.6f__%s" % (clf.__class__.__name__,
+                              score.auc, params)
+    fpath = os.path.join(scores_dir, fname)
+    with open(fpath, 'w') as fh:
+        #label = "# %s, AUC: %.6f, %s\n" % (clf.__class__.__name__,
+                                           #score.auc, params)
+        #fh.write(label)
+        score.to_csv(fh)
+
+
 def grid_test(clf, params, n_folds=5, filepath=None,
               extra_params={}):
     train_mails = parse_mails(COMPLETE_ALL['filename'])
@@ -178,6 +300,8 @@ def grid_test(clf, params, n_folds=5, filepath=None,
     scores_count = len(interp_scores)
 
     for (params, score), (ls, lc) in zip(interp_scores, linestyles_gen()):
+        save_grid_test_result(clf, params, score)
+
         label = "%s (AUC: %.5f)" % (params, score.auc)
         plt.subplot(2, 1, 1)
         score.plot(label=label, lc=lc, ls=ls, fill_alpha=0.5 / scores_count)
@@ -201,7 +325,7 @@ def grid_test(clf, params, n_folds=5, filepath=None,
     plt.ylim(0.8, 1)
     if filepath:
         plt.savefig(filepath)
-    plt.show()
+    plt.close()
     return grid_search
 
 
@@ -402,6 +526,12 @@ if __name__ == '__main__':
         grid_search = forest_grid()
     elif sys.argv[1] == 'text_vectorizer_grid':
         grid_search = text_vectorizer_grid()
+    elif sys.argv[1] == 'all_grid':
+        logistic_regression_grid()
+        naive_bayes_grid()
+        svm_grid()
+        linear_svm_grid()
+        forest_grid()
     elif sys.argv[1] == 'classifiers_comparison':
         classifiers_comparison()
     else:
