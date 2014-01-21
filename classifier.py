@@ -501,7 +501,7 @@ def roc_model_score_all():
 
 def prepare_model():
     print "Preparing model..."
-    clf = LogisticRegression()
+    clf = LogisticRegression(C=3.5)
     model = AntispamModel(clf)
     train_mails = parse_mails(TRAIN_ALL['filename'])
     train_labels = TRAIN_ALL['label']

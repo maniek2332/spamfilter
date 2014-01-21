@@ -32,12 +32,10 @@ drogą elektroniczną niechciane wiadomości - spam. Wykorzystują oni
 wiadomości e-mail między innymi do rozsyłania treści reklamowych.
 
 Istnieje wiele
-różnych sposobów obrony przed spamem. Tym, któremu poświęcono tą
-prace jest stworzenie systemu, zdolnego nauczyć się rozróżniać
-wiadomości spamowe od niespamowych. Technologią, która
-zapewnia możliwość uczenia się takiego systemu, jest uczenie maszynowe.
-Do nauki wykorzystano
-publicznie dostępny korpus wiadomości e-mail.
+różnych sposobów obrony przed spamem. Tym, któremu poświęcono
+prace jest stworzenie systemu zdolnego nauczyć się rozróżniać
+wiadomości spamowe od niespamowych. Do nauki wykorzystano
+publicznie dostępny korpus wiadomości e-mail [9].
 
 W dalszej części tego rozdziału opisane zostały szczegółowe cele
 pracy, przybliżone zostało pojęcie uczenia maszynowego i narzędzia
@@ -80,7 +78,7 @@ jest:
 
 Przy klasyfikacji system skupia się przede wszystkim na treści
 wiadomości. Informacje takie jak adres nadawcy lub adres serwera,
-z którego wiadomość nadeszła nie są brane pod uwagę.
+z którego wiadomość nadeszła, nie są brane pod uwagę.
 
 Uczenie maszynowe
 -----------------
@@ -89,10 +87,7 @@ Uczenie maszynowe jest dziedziną sztucznej inteligencji. Polega ono
 na tworzeniu systemów, które na podstawie przykładów są w stanie uczyć
 się, to znaczy zyskiwać wiedzę poprzez gromadzenie doświadczenia.
 Umożliwia im to efektywniejsze wykonywanie podobnych zadań
-w przyszłości. [1]_
-
-.. [1] Bolc L., Zaremba P., Wprowadzenie do uczenia się maszyn,
-   Akademicka Oficyna Wydawnicza, 1993
+w przyszłości [1].
 
 Uczenie maszynowe ma szerokie zastosowanie w różnych aspektach
 życia, stosuje się je między innymi do:
@@ -111,7 +106,7 @@ pracy, zostały wykonane na komputerze o parametrach:
 Biblioteka scikit-learn
 -----------------------
 
-Biblioteka *scikit-learn* [2]_,
+Biblioteka *scikit-learn* [2],
 znana również pod nazwami *scikits.learn* i *sklearn*, jest
 open-source'ową biblioteką przeznaczoną dla języka programowania
 Python. Dostarcza wiele algorytmów uczenia maszynowego do klasyfikacji,
@@ -124,12 +119,8 @@ funkcje pomocnicze służące między innymi do:
 
 Dla algorytmów takich jak regresja logistyczna i
 maszyna wsparcia wektorowego *scikit-learn*
-wykorzystuje zewnętrzne biblioteki *LIBLINEAR* [3]_ i *LIBSVM* [4]_,
+wykorzystuje zewnętrzne biblioteki *LIBLINEAR* [3] i *LIBSVM* [4],
 co zapewnia wysoką wydajność obliczeń.
-
-.. [2] http://scikit-learn.org/
-.. [3] http://www.csie.ntu.edu.tw/~cjlin/liblinear/
-.. [4] http://www.csie.ntu.edu.tw/~cjlin/libsvm/
 
 Elementy projektu
 -----------------
@@ -155,10 +146,8 @@ Na parsowanie HTMLa składa się:
 #. Podsumowanie liczby i typów tagów użytych w wiadomości.
 #. Podliczenie liczby błędów, które pojawiły się w drzewie wiadomości.
 
-Parser stworzony został w oparciu o moduł *HTMLParser* [5]_ z
+Parser stworzony został w oparciu o moduł *HTMLParser* [5] z
 biblioteki standardowej języka Python.
-
-.. [5] http://docs.python.org/2/library/htmlparser.html
 
 Ekstraktor cech
 ~~~~~~~~~~~~~~~
@@ -171,15 +160,14 @@ Ekstraktor zajmuje się takimi zadaniami jak:
 #. Zliczenie wystąpień słów w ciele wiadomości.
 #. Zliczenie wystąpień linków i adresów w ciele wiadomości.
 
-Do zliczania słów wykorzystane zostały narzędzia [6]_ pochodzące
+Do zliczania słów wykorzystane zostały narzędzia [6] pochodzące
 z biblioteki *scikit-learn*.
-
-.. [6] http://scikit-learn.org/stable/modules/feature_extraction.html
 
 Klasyfikator
 ~~~~~~~~~~~~
 
-Jest to moduł odpowiedzialny za utworzenie modelu klasyfikatora wiadomości.
+Klasyfikator jest modułem odpowiedzialnym za utworzenie
+modelu klasyfikatora wiadomości.
 Wykorzystuje on informacje uzyskane z ekstraktora cech.
 Znajdują się tutaj funkcje odpowiedzialne za trening oraz
 testowanie modelu, a także wykonujące pomiar wydajności poszczególnych
@@ -200,12 +188,7 @@ Wtyczka do programu pocztowego
 
 W celu demonstracji możliwości integracji filtra antyspamowego
 z klientami poczty,
-stworzona została przykładowa wtyczka do programu *Claws Mail* [7]_.
-
-.. [7] http://www.claws-mail.org/
-
-
-.. page::
+stworzona została przykładowa wtyczka do programu *Claws Mail* [7].
 
 
 Przetwarzanie wiadomości
@@ -224,10 +207,10 @@ Korpus wiadomości
 -----------------
 
 W projekcie wykorzystana została baza wiadomości
-używana w projekcie *SpamAssasin* [8]_. Znajdujące się
+używana w projekcie *SpamAssasin* [8]. Znajdujące się
 w niej wiadomości pochodzą z różnych źródeł, są to między innymi
 publiczne fora, newslettery stron internetowych oraz skrzynki pocztowe
-osób zaangażowanych w tworzenie korpusu [9]_. Wśród znajdujących
+osób zaangażowanych w tworzenie korpusu [9]. Wśród znajdujących
 się w tej bazie e-maili można wyróżnić następujące kategorie:
 
  * **Spam** - wiadomości spamowe, żadne z tych wiadomości nie pochodzą
@@ -243,9 +226,10 @@ się w tej bazie e-maili można wyróżnić następujące kategorie:
    Tabela 2.1 zawiera informacje na temat liczby wiadomości w
    poszczególnych kategoriach.
 
+.. class:: caption
 
-.. [8] http://spamassassin.apache.org/
-.. [9] http://spamassassin.apache.org/publiccorpus/readme.html
+   **Tabela 2.1.** Liczba wiadomości poszczególnych
+   kategorii znajdujących się w korpusie
 
 ============= =================
 Kategoria     Liczba wiadomości
@@ -256,11 +240,6 @@ Spam          1896
 **Suma**      **6097**
 ============= =================
 
-.. class:: caption
-
-   **Tabela 2.1.** - Liczba wiadomości poszczególnych
-   kategorii znajdujących się w korpusie
-
 Budowa wiadomości e-mail
 ------------------------
 
@@ -269,9 +248,7 @@ ciała. Części te oddzielone są od siebie sekwencją znaków
 ``<CR><LF><CR><LF>`` (CR - Carriage Return, LF - Line Feed).
 
 Część nagłówkowa składa z wielu nagłówków w formacie:
-
-| ``Nazwa nagłówka: Wartość nagłówka``
-
+``Nazwa nagłówka: Wartość nagłówka``.
 Jeden taki nagłówek może zajmować kilka linijek (każda kolejna
 linijka musi się rozpoczynać białymi znakami - spacje lub
 tabulacje). Wielkość znaków w nazwie nagłówka nie ma znaczenia.
@@ -298,7 +275,7 @@ Listing 2.1 zawiera przykładowy nagłówek.
 
 .. class:: caption
 
-   **Listing 2.1.** - Przykładowy nagłówek wiadomości e-mail
+   **Listing 2.1.** Przykładowy nagłówek wiadomości e-mail
 
 Ciało wiadomości to właściwa zawartość e-maila. Może być ono zapisane
 zarówno w języku znaczników jakim jest HTML, jak również jako
@@ -360,7 +337,7 @@ Listing 2.2 zawiera przykłady użycia tego nagłówka.
 
 .. class:: caption
 
-   **Listing 2.2.** - Przykłady wykorzystania nagłówka ``Content-Type``
+   **Listing 2.2.** Przykłady wykorzystania nagłówka ``Content-Type``
 
 Content-Transfer-Encoding
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -384,19 +361,18 @@ Listing 2.3 zawiera przykłady wykorzystania tego nagłówka.
 
 .. class:: caption
 
-   **Listing 2.3.** - Przykłady wykorzystania
+   **Listing 2.3.** Przykłady wykorzystania
    nagłówka ``Content-Transfer-Encoding``
 
 Subject
 ~~~~~~~
 
 W nagłówku tym zapisany jest temat wiadomości. Domyślnie nagłówek
-ten zawiera tylko znaki ASCII. Jednak tutaj podobnie
-jak w ciele wiadomości spotkać się można z różnymi stronami kodowymi i
+ten zawiera tylko znaki ASCII. Jednak tutaj, podobnie
+jak w ciele wiadomości, spotkać się można z różnymi stronami kodowymi i
 kodowaniami. Jeśli nagłówek jest dodatkowo zakodowany przyjmuje
-on postać:
-
-|    ``=?strona_kodowa?kodowanie?zakodowany_temat?=``
+on postać: ``=?strona_kodowa?kodowanie?zakodowany_temat?=``. Zawartość
+takiego nagłówka składa się z następujących elementów:
 
 * ``strona_kodowa`` to nazwa strony kodowej, w jakiej zapisany jest temat,
 * ``kodowanie`` to litera ``Q`` lub ``B``, wskazuje to typ użytego kodowania,
@@ -404,7 +380,7 @@ on postać:
 * ``zakodowany_temat`` to zakodowany temat wiadomości.
 
 W celu odczytania takiego tematu najpierw dekodowany jest ``zakodowany_temat``
-używając właściwego kodowania, a następnie odczytywany jest przy pomocy
+używając właściwego kodowania, a następnie odczytywany jest, przy pomocy
 podanej strony kodowej.
 
 ::
@@ -419,7 +395,7 @@ podanej strony kodowej.
 
 .. class:: caption
 
-   **Listing 2.4.** - Przykłady wykorzystania nagłówka ``Subject``
+   **Listing 2.4.** Przykłady wykorzystania nagłówka ``Subject``
 
 W listingu 2.4 można zauważyć, że
 w końcówkach niektórych tematów pojawiają się dodatkowe
@@ -458,24 +434,38 @@ zakodowanego z wykorzystaniem ``quoted-printable``.
 
 .. class:: caption
 
-   **Listing 2.5.** - Fragment ciała wiadomości e-mail zakodowany przy
+   **Listing 2.5.** Fragment ciała wiadomości e-mail zakodowany przy
    użyciu ``quoted-printable``
 
 Drugim spotykanym kodowaniem jest ``base64``. Jest to inny rodzaj kodowania,
 koduje się za jego pomocą już nie pojedyncze znaki a cały blok danych.
-W niektórych wiadomościach zdarza się spotkać z sytuacją kiedy tylko
+W niektórych wiadomościach zdarza się spotkać z sytuacją, kiedy tylko
 początek ciała jest zakodowany jako ``base64``, natomiast reszta tekstu
 zapisana jest prostym tekstem. Z tego powodu do wyznaczenia
 części wiadomości, która jest zakodowana wykorzystane zostało
-wyrażenie regularne, które dopasowywane jest do ciała:
+wyrażenie regularne, które dopasowywane jest do ciała. Wyrażenie to
+zamieszczone jest w listingu 2.6. Tekst "Ala ma kota" zapisany
+w kodowaniu ``base64`` znajduje się w listingu 2.7.
 
-| ``RE_BASE64 = re.compile('(?:(?:[a-zA-Z0-9+/=]+)[\n]?)+')``
+::
 
-Tekst "Ala ma kota" zapisany w ``base64`` wygląda następująco:
+    RE_BASE64 = re.compile('(?:(?:[a-zA-Z0-9+/=]+)[\n]?)+')
 
-| ``QWxhIG1hIGtvdGE=``
+.. class:: caption
 
-Aby wiadomość mogła być prawidłowo wyświetlona musi zostać ona wczytana
+   **Listing 2.6.** Wyrażenie regularne znajdujące tekst będący wynikiem
+   kodowania ``base64``
+
+::
+
+    QWxhIG1hIGtvdGE=
+
+.. class:: caption
+
+   **Listing 2.7.** Tekst "Ala ma kota" zapisany z użyciem kodowania
+   ``base64``
+
+Aby wiadomość mogła być prawidłowo wyświetlona musi zostać wczytana
 przy pomocy odpowiedniej strony kodowej. Wymagana strona kodowa
 zadeklarowana jest w nagłówku ``Content-Type`` jako ``charset``.
 Przy przetwarzaniu tekstu może się zdarzyć sytuacja, że bajt, który
@@ -511,7 +501,7 @@ przy przetwarzaniu struktury HTML.
 Wiadomości wieloczęściowe
 -------------------------
 
-Jak już wcześniej wspomniano niektóre wiadomości mają formę wieloczęściową.
+Jak już wcześniej wspomniano, niektóre wiadomości mają formę wieloczęściową.
 Takie e-maile rozpoznać można po typie ``multipart/`` zawartym w nagłówku
 ``Content-Type``. Wówczas nagłówek ten zawiera również wartość ``boundary``,
 która posłuży do podzielenia wiadomości. Przykładowo jeśli nasze ``boundary``
@@ -530,7 +520,7 @@ jest wiadomością wieloczęściową. Z tego powodu wykorzystane zostało
 rozwiązanie rekurencyjne, które łatwo radzi sobie z takim
 problemem.
 
-Listing 2.6 zawiera przykładową wiadomość wieloczęściową.
+Listing 2.8 zawiera przykładową wiadomość wieloczęściową.
 Wartość ``boundary`` dla niej to ``BoundaryOfDocument``.
 
 ::
@@ -569,7 +559,7 @@ Wartość ``boundary`` dla niej to ``BoundaryOfDocument``.
 
 .. class:: caption
 
-   **Listing 2.6.** - Przykładowa wiadomość wieloczęściowa.
+   **Listing 2.8.** Przykładowa wiadomość wieloczęściowa
 
 Istotne cechy wiadomości
 ------------------------
@@ -583,7 +573,9 @@ tagami wyróżniającymi. Ma to na celu zwrócenie szczególnej
 uwagi na wiadomości gdzie spora część tekstu miała
 na celu przykucie uwagi odbiorcy.
 
-Algorytmy uczenia maszynowego wymagają, aby ich dane wejściowe
+Większość wykorzystanych w tej pracy algorytmów uczenia
+maszynowego (wszystkie oprócz drzew decyzyjnych) wymaga,
+aby ich dane wejściowe
 były danymi numerycznymi. Nie jest to problemem dla danych
 takich jak liczba użytych tagów, czy procentowe pokrycie
 tekstu danym tagiem. Jednakże, danych tekstowych nie można
@@ -593,7 +585,7 @@ wektoryzacją. Polega on
 na zliczeniu wystąpień ``N`` najczęściej występujących
 słów, we wszystkich przetwarzanych e-mailach. Efektem takiego
 działania będzie macierz o wymiarze :math:`M \times N`, gdzie
-:math:`M` jest liczbą przetwarzanych tekstów. Macierz ta
+:math:`M\;` jest liczbą przetwarzanych tekstów. Macierz ta
 będzie macierzą rzadką. Wartość :math:`N`, będąca liczbą
 najpopularniejszych słów jakie zliczamy, była dobierana
 eksperymentalnie, testowane były różne warianty.  
@@ -605,29 +597,29 @@ została inna forma zliczania słów, mianowicie TF-IDF
 (ang. TF - term frequency, IDF - inverse document frequency).
 Użycie tej techniki sprawia, że mniejsza waga zostaje
 przypisana do słów popularnych w wielu wiadomościach,
-np. przyimków [10]_. Podobnie jak przy wektoryzacji
+np. przyimków [10]. Podobnie jak przy wektoryzacji
 zliczającej słowa, tutaj także liczba najpopularniejszych
 słów - :math:`N` - była wybierana eksperymentalnie.
 
 Z wiadomości pobrano następujące cechy:
 
- * ``body_length`` - długość tekstu wiadomości (w znakach),
- * ``tags_count`` - liczba otwarć tagów HTML,
- * ``errors_count`` - liczba błędnie zamkniętych tagów HTML,
- * ``cov_b`` - pokrycie tekstu tagiem ``<b>``
- * ``cov_i`` - pokrycie tekstu tagiem ``<i>``
- * ``cov_font`` - pokrycie tekstu tagiem ``<font>``
- * ``cov_center`` - pokrycie tekstu tagiem ``<center>``
- * ``http_links`` - liczba linków HTTP w wiadomości
- * ``http_raw_links`` - liczba linków HTTP w wiadomości, których
-   adres jest podany jako IP,
- * ``mail_links`` - liczba linków mailowych w wiadomości
- * ``attached_images`` - liczba obrazków dołączony do wiadomości
- * ``charset_errors`` - wartość logiczna, oznacza występowanie
-   błędów odczytu wiadomości w zadeklarowanej przez nią stronie
-   kodowej,
- * zwektoryzowany temat wiadomości,
- * zwektoryzowana treść wiadomości.
+* ``body_length`` - długość tekstu wiadomości (w znakach),
+* ``tags_count`` - liczba otwarć tagów HTML,
+* ``errors_count`` - liczba błędnie zamkniętych tagów HTML,
+* ``cov_b`` - pokrycie tekstu tagiem ``<b>``,
+* ``cov_i`` - pokrycie tekstu tagiem ``<i>``,
+* ``cov_font`` - pokrycie tekstu tagiem ``<font>``,
+* ``cov_center`` - pokrycie tekstu tagiem ``<center>``,
+* ``http_links`` - liczba linków HTTP w wiadomości,
+* ``http_raw_links`` - liczba linków HTTP w wiadomości, których
+  adres jest podany jako IP,
+* ``mail_links`` - liczba linków mailowych w wiadomości,
+* ``attached_images`` - liczba obrazków dołączony do wiadomości,
+* ``charset_errors`` - wartość logiczna, oznacza występowanie
+  błędów odczytu wiadomości w zadeklarowanej przez nią stronie
+  kodowej,
+* zwektoryzowany temat wiadomości,
+* zwektoryzowana treść wiadomości.
 
 Część cech zostało wyznaczonych w stosunku do długości tekstu
 wiadomości:
@@ -642,7 +634,7 @@ wiadomości:
  * ``rel_http_raw_links`` - stosunek ``http_raw_links`` do ``body_length``,
  * ``rel_mail_links`` - stosunek ``mail_links`` do ``body_length``.
 
-Przykładową listę cech zamieszczono w listingu 2.7.
+Przykładową listę cech zamieszczono w listingu 2.9.
 
 ::
 
@@ -670,12 +662,9 @@ Przykładową listę cech zamieszczono w listingu 2.7.
 
 .. class:: caption
 
-   **Listing 2.7.** - Lista cech przykładowej wiadomości (nie zawarto
+   **Listing 2.9.** Lista cech przykładowej wiadomości (nie zawarto
    cech uzyskanych poprzez wektoryzację tematu i tekstu
    wiadomości)
-
-.. [10] Manning, C. D.; Raghavan, P.; Schutze, H. (2008).
-   "Scoring, term weighting, and the vector space model"
 
 Przygotowanie danych wejściowych dla klasyfikatorów
 ---------------------------------------------------
@@ -689,9 +678,6 @@ są macierze rzadkie, z wartościami nie mniejszymi niż 0.
 Taki proces normalizacji nie zaburzy rzadkości macierzy,
 co z kolei ułatwi przetrzymywanie takiej macierzy w pamięci
 operacyjnej.
-
-
-.. page::
 
 
 Algorytmy uczenia maszynowego
@@ -720,11 +706,11 @@ na innym zestawie danych, niż te użyte do treningu. W tym celu, korpus
 wiadomości został podzielony na zestaw treningowy i zestaw testowy
 według poniższych reguł:
 
-#. Cały korpus zostaje podzielony na :math:`k` równych części, przy
+#. Cały korpus zostaje podzielony na :math:`k\,` równych części, przy
    czym w każdej części proporcja wiadomości spamowych i niespamowych
    jest taka sama.
-#. Walidacja zostaje wykonana :math:`k` razy.
-#. W każdej walidacji :math:`k - 1` części zostaje wykorzystanych jako
+#. Walidacja zostaje wykonana :math:`k\,` razy.
+#. W każdej walidacji :math:`k - 1\,` części zostaje wykorzystanych jako
    dane treningowe, a pozostała część jako dane testowe.
 #. Wyniki powyższych walidacji zostają uśrednione.
 
@@ -748,7 +734,7 @@ AUC, tym lepszy wynik osiągnięty przez klasyfikator.
 Dobór parametrów wektoryzacji
 -----------------------------
 
-Jak wspomniano wcześniej, ilość najpopularniejszych słów branych pod uwagę,
+Jak wspomniano wcześniej, liczba najpopularniejszych słów branych pod uwagę,
 w temacie wiadomości i jej tekście, została wybrana eksperymentalnie.
 Do testów wykorzystano regresję logistyczną o domyślnych parametrach
 (więcej o tym algorytmie w dalszej części tego rozdziału). Wyniki
@@ -760,6 +746,12 @@ parametrów powodowałoby wydłużenie czasów treningu systemu i klasyfikacji
 wiadomości.
 
 .. page::
+
+.. class:: caption
+
+   **Tabela 3.1.** Wyniki kroswalidacji dla doboru paramerów wektoryzacji;
+   parametr ``text_words`` oznacza liczbę słów w tekście wiadomości,
+   natomiast ``subject_words`` - liczbę słów w temacie wiadomości
 
 =================================== ==================== ======================
 Parametry                           Średnie AUC          Odchylenie standardowe
@@ -778,19 +770,13 @@ text_words=3000, subject_words=100  0.99878              0.00053
 text_words=3000, subject_words=300  0.99885              0.00051
 =================================== ==================== ======================
 
-.. class:: caption
-
-   **Tabela 3.1.** - Wyniki kroswalidacji dla doboru paramerów wektoryzacji;
-   parametr ``text_words`` oznacza liczbę słów w tekście wiadomości,
-   natomiast ``subject_words`` - liczbę słów w temacie wiadomości
-
 .. image:: charts/ROC_TextVectorizer.png
    :width: 85%
    :align: center
 
 .. class:: caption
 
-   **Rysunek 3.1.** - Krzywe ROC kroswalidacji dla wyboru parametrów
+   **Rysunek 3.1.** Krzywe ROC kroswalidacji dla wyboru parametrów
    wektoryzacji
 
 Regresja logistyczna
@@ -798,36 +784,38 @@ Regresja logistyczna
 
 Regresja logistyczna jest uogólnionym modelem liniowym klasyfikacji danych.
 Dzięki wykorzystaniu funkcji logistycznej, wartość przewidywana przez
-ten model zawiera się w przedziale ``[0, 1]`` [11]_.
+ten model zawiera się w przedziale ``[0, 1]`` [11].
 
 Jednym z parametrów regresji logistycznej jakim można manipulować
 jest ``C``. Parametr ten odpowiedzialny jest za regularyzację.
 Regularyzacja ma na celu zapobieganie sytuacji, w której algorytm
-nadmiernie dopasuje (ang *overfitting*) się do danych treningowych,
-co obniży jego efektywność dla danych testowych [11]_. Im mniejsza
+nadmiernie dopasuje (ang. *overfitting*) się do danych treningowych,
+co obniży jego efektywność dla danych testowych [11]. Im mniejsza
 wartość ``C``, tym regularyzacja będzie silniejsza.
 
 Tabela 3.2 i rysunek 3.2 przedstawiają wyniki kroswalidacji
-dla regresji logistycznej, z użyciem różnych wartości parametru ``C``.
+dla regresji logistycznej z użyciem różnych wartości parametru ``C``.
 Z wyników tych można wywnioskować, że optymalna wartość ``C``
 zawiera się wa zakresie ``[3.5, 7.5]``.
 Przeciętny czas treningu wyniósł 30 sekund.
 
-================================= ====================== ======================
-Parametry                         Średnie AUC            Odchylenie standardowe
-================================= ====================== ======================
-C=0.1                               0.99748              0.00059
-C=0.5                               0.99852              0.00056
-C=1                                 0.99870              0.00055
-C=1.5                               0.99877              0.00058
-C=3.5                               0.99882              0.00059
-C=7.5                               0.99882              0.00060
-C=5                                 0.99883              0.00060
-================================= ====================== ======================
-
 .. class:: caption
 
-   **Tabela 3.2.** - Wyniki kroswalidacji dla regresji logistycznej
+   **Tabela 3.2.** Wyniki kroswalidacji dla regresji logistycznej
+
+==================== ======== =========== ===========
+Parametry            Średnie  Odchylenie  TPR dla    
+                     AUC      standardowe FPR ~ 0.03 
+                              AUC                    
+==================== ======== =========== ===========
+C=0.1                0.99748  0.00059     0.98969     
+C=0.5                0.99851  0.00058     0.99209      
+C=1.0                0.99871  0.00055     0.99209    
+C=1.5                0.99877  0.00057     0.99156     
+C=7.5                0.99882  0.00059     0.99330     
+C=5.0                0.99883  0.00059     0.99307     
+C=3.5                0.99883  0.00058     0.99352    
+==================== ======== =========== ===========
 
 .. image:: charts/ROC_LogisticRegression.png
    :width: 85%
@@ -835,10 +823,7 @@ C=5                                 0.99883              0.00060
 
 .. class:: caption
 
-   **Rysunek 3.2.** - Krzywe ROC dla regresji logistycznej
-
-.. [11] Trevor Hastie, Robert Tibshirani, Jerome Friedman,
-   The Elements of Statistical Learning, 2009
+   **Rysunek 3.2.** Krzywe ROC dla regresji logistycznej
 
 Naiwny klasyfikator bayesowski
 ------------------------------
@@ -848,27 +833,29 @@ stosującą twierdzenie Bayesa do przetwarzanych danych.
 Nazywa się go naiwnym, ponieważ zakłada on, że wszystkie
 przetwarzane cechy są od siebie niezależne. Mimo, że
 założenie to zwykle nie jest spełnione, algorytm
-wciąż jest skuteczny [11]_.
+wciąż jest skuteczny [11].
 
-Parametrem jaki można kontrolować jest tutaj wygładzanie
+Parametrem, jaki można kontrolować jest tutaj wygładzanie
 Laplace'a - ``alpha``. Wyniki kroswalidacji znajdują się
 w tabeli 3.3 i na rysunku 3.3. Średni czas treningu wynosił
 25 sekund.
 
-================================= ====================== ======================
-Parametry                         Średnie AUC            Odchylenie standardowe
-================================= ====================== ======================
-alpha=0.001                         0.99581              0.00154
-alpha=1                             0.99598              0.00102
-alpha=0.5                           0.99624              0.00092
-alpha=0.01                          0.99653              0.00090
-alpha=0.1                           0.99655              0.00086
-================================= ====================== ======================
-
 .. class:: caption
 
-   **Tabela 3.3.** - Wyniki kroswalidacji dla naiwnego klasyfikatora
+   **Tabela 3.3.** Wyniki kroswalidacji dla naiwnego klasyfikatora
    bayesowskiego
+
+==================== ======== =========== ===========
+Parametry            Średnie  Odchylenie  TPR dla    
+                     AUC      standardowe FPR ~ 0.03 
+                              AUC                    
+==================== ======== =========== ===========
+alpha=1.0            0.99580  0.00104     0.97942    
+alpha=0.001          0.99585  0.00152     0.98065    
+alpha=0.5            0.99602  0.00100     0.98102    
+alpha=0.01           0.99613  0.00123     0.98189    
+alpha=0.1            0.99621  0.00105     0.98254
+==================== ======== =========== ===========
 
 .. image:: charts/ROC_NaiveBayes.png
    :width: 85%
@@ -876,7 +863,7 @@ alpha=0.1                           0.99655              0.00086
 
 .. class:: caption
 
-   **Rysunek 3.3.** - Krzywe ROC dla naiwnego klasyfikatora
+   **Rysunek 3.3.** Krzywe ROC dla naiwnego klasyfikatora
    bayesowskiego
 
 Maszyna wsparcia wektorowego
@@ -892,7 +879,7 @@ za pomocą hiperpłaszczyzny, będącej w największym możliwym
 odstępie od punktów, które oddziela (przykład takiego
 podziału znajduje się na rysunku 3.3). Ponadto, dzięki
 zastosowaniu funkcji jąder, SVM może zostać zastosowany
-do nieliniowej klasyfikacji [11]_.
+do nieliniowej klasyfikacji [11].
 
 Przetestowane zostały dwie wersje SVM:
 
@@ -911,40 +898,46 @@ czas treningu wyniósł:
  * 2.2 minuty dla SVM z jądrem RBF,
  * 1.2 minuty dla liniowego SVM.
 
-================================= ====================== ======================
-Parametry                         Średnie AUC            Odchylenie standardowe
-================================= ====================== ======================
-C=3.5                               0.99500              0.00059
-C=1.5                               0.99603              0.00050
-C=1                                 0.99639              0.00046
-C=0.1                               0.99673              0.00074
-C=0.5                               0.99677              0.00043
-================================= ====================== ======================
-
 .. class:: caption
 
-   **Tabela 3.3.** - Wyniki kroswalidacji dla liniowego SVM
+   **Tabela 3.3.** Wyniki kroswalidacji dla liniowego SVM
+
+==================== ======== =========== ===========
+Parametry            Średnie  Odchylenie  TPR dla    
+                     AUC      standardowe FPR ~ 0.03 
+                              AUC                    
+==================== ======== =========== ===========
+C=3.5                0.99500  0.00059     0.97272
+C=1.5                0.99603  0.00050     0.98154
+C=1.0                0.99639  0.00046     0.98312
+C=0.1                0.99673  0.00074     0.98470
+C=0.5                0.99677  0.00043     0.98734
+==================== ======== =========== ===========
 
 .. page::
 
-================================= ====================== ======================
-Parametry                         Średnie AUC            Odchylenie standardowe
-================================= ====================== ======================
-gamma=0.01, C=0.1                   0.97849              0.00334
-gamma=0.01, C=0.5                   0.99052              0.00154
-gamma=0.1, C=0.1                    0.99224              0.00129
-gamma=0.01, C=1                     0.99418              0.00101
-gamma=0.01, C=1.5                   0.99524              0.00074
-gamma=0.01, C=3.5                   0.99622              0.00037
-gamma=0.1, C=0.5                    0.99647              0.00038
-gamma=0.1, C=1                      0.99679              0.00026
-gamma=0.1, C=3.5                    0.99698              0.00060
-gamma=0.1, C=1.5                    0.99700              0.00032
-================================= ====================== ======================
-
 .. class:: caption
 
-   **Tabela 3.4.** - Wyniki kroswalidacji dla SVM z jądrem RBF
+   **Tabela 3.4.** Wyniki kroswalidacji dla SVM z jądrem RBF
+
+===================== ======== =========== ===========
+Parametry             Średnie  Odchylenie  TPR dla    
+                      AUC      standardowe FPR ~ 0.03 
+                               AUC                    
+===================== ======== =========== ===========
+gamma=0.01, C=0.1     0.97849  0.00334     0.67879
+gamma=0.01, C=0.5     0.99052  0.00154     0.91274
+gamma=0.1, C=0.1      0.99224  0.00129     0.93476
+gamma=0.01, C=1.0     0.99418  0.00101     0.95511
+gamma=0.01, C=1.5     0.99524  0.00074     0.96782
+gamma=0.01, C=3.5     0.99622  0.00037     0.98575
+gamma=0.1, C=0.5      0.99647  0.00038     0.98523
+gamma=0.1, C=1.0      0.99679  0.00026     0.98839
+gamma=0.1, C=3.5      0.99698  0.00060     0.98681
+gamma=0.1, C=1.5      0.99700  0.00032     0.98786
+===================== ======== =========== ===========
+
+.. space:: 35
 
 .. image:: images/SVM_hyperplane_stripped.png
    :width: 65%
@@ -952,8 +945,8 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
 .. class:: caption
 
-   **Rysunek 3.3.** - Przykład rodzielenia dwóch kategorii danych
-   przez SVM [12]_
+   **Rysunek 3.3.** Przykład rodzielenia dwóch kategorii danych
+   przez SVM [12]
 
 .. image:: charts/ROC_SVM-linear.png
    :width: 85%
@@ -961,7 +954,7 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
 .. class:: caption
 
-   **Rysunek 3.4.** - Krzywe ROC dla liniowego SVM
+   **Rysunek 3.4.** Krzywe ROC dla liniowego SVM
 
 .. image:: charts/ROC_SVM-rbf.png
    :width: 85%
@@ -969,9 +962,7 @@ gamma=0.1, C=1.5                    0.99700              0.00032
 
 .. class:: caption
 
-   **Rysunek 3.5.** - Krzywe ROC dla SVM z jądrem RBF
-
-.. [12] http://en.wikipedia.org/wiki/Support_vector_machine
+   **Rysunek 3.5.** Krzywe ROC dla SVM z jądrem RBF
 
 Las drzew losowych
 ------------------
@@ -979,10 +970,10 @@ Las drzew losowych
 Las drzew losowych jest metodą zespołowego uczenia. Polega
 ona na wytrenowaniu wielu prostych, prawdopodobnie słabo
 przystosowanych klasyfikatorów i połączenia ich w jeden
-klasyfikator. W przypadku Lasu drzew losowych, jako
-pomniejsze klasyfikatory wykorzystywane są drzewa decyzyjne.
+klasyfikator. W przypadku drzew losowych, jako
+klasyfikatory wykorzystywane są drzewa decyzyjne.
 Świetnie nadają się do tego zadania, ze względu na ich
-możliwość uczenia się skomplikowanych relacji między cechami [11]_.
+możliwość uczenia się skomplikowanych relacji między cechami [11].
 
 W przypadku lasów losowych można decydować z ilu drzew
 składać się będzie las, odpowiedzialny jest za to parametr
@@ -995,19 +986,21 @@ Może to znacząco poprawić szybkość działania na maszynach
 wielordzeniowych i klastrach obliczeniowych. Czas treningu,
 zależnie od liczby użytych drzew, wynosił od 23 do 35 sekund.
 
-================================= ====================== ======================
-Parametry                         Średnie AUC            Odchylenie standardowe
-================================= ====================== ======================
-n_estimators=10                     0.99465              0.00239
-n_estimators=30                     0.99704              0.00103
-n_estimators=50                     0.99724              0.00086
-n_estimators=75                     0.99743              0.00077
-n_estimators=100                    0.99765              0.00049
-================================= ====================== ======================
-
 .. class:: caption
 
-   **Tabela 3.5.** - Wyniki kroswalidacji dla lasów drzew losowych
+   **Tabela 3.5.** Wyniki kroswalidacji dla lasów drzew losowych
+
+=================== ======== =========== ===========
+Parametry           Średnie  Odchylenie  TPR dla    
+                    AUC      standardowe FPR ~ 0.03 
+                             AUC                    
+=================== ======== =========== ===========
+n_estimators=10     0.99503  0.00170     0.97215       
+n_estimators=30     0.99713  0.00058     0.98681       
+n_estimators=50     0.99741  0.00045     0.98857       
+n_estimators=100    0.99755  0.00069     0.98892       
+n_estimators=75     0.99774  0.00044     0.98892    
+=================== ======== =========== ===========
 
 .. image:: charts/ROC_RandomForest.png
    :width: 85%
@@ -1015,32 +1008,39 @@ n_estimators=100                    0.99765              0.00049
 
 .. class:: caption
 
-   **Rysunek 3.6.** - Krzywa ROC dla lasu drzew losowych
+   **Rysunek 3.6.** Krzywa ROC dla lasu drzew losowych
 
 
 Porównanie efektywności klasyfikatorów
 --------------------------------------
 
-Najlepszy rezultat, wśród porównywanych algorytmów, uzyskała regresja
+W finalnym porównaniu zamieszczono instancje poszczególnych algorytmów,
+które uzyskały najwyższy wynik TPR, dla FPR bliskiego 0.03. Pozwala to
+wybrać algorytm (i jego parametry),
+który najlepiej wykrywa spam, przy założeniu, że
+poziom fałszywych alarmów jest na poziomie około 3%.
+Najlepszy rezultat - wśród porównywanych algorytmów - uzyskała regresja
 logistyczna. Pozostałe algorytmy uzyskały zbliżone do siebie wyniki.
 Lepszy wynik mogłaby uzyskać maszyna wsparcia wektorowego, jednakże,
 ze względu na długi czas obliczeń, algorytm ten pracował na mniejszej
 ilości danych (zmniejszenie parametrów wektoryzacji tekstu). Szczegółowe
 porównanie znajduje się w tabeli 3.6 i na rysunku 3.7.
 
-======================= ================== ================== ======================
-Algorytm                Parametry          Średnie AUC        Odchylenie standardowe
-======================= ================== ================== ======================
-Regresja logistyczna    C=5                  0.99883          0.00060
-Naiwny klas. bayesowski alpha=0.1            0.99655          0.00086
-SVM (liniowy)           C=0.5                0.99677          0.00043
-SVM (RBF)               gamma=0.1, C=1.5     0.99700          0.00032
-Las drzew losowych      n_estimators=100     0.99765          0.00049
-======================= ================== ================== ======================
-
 .. class:: caption
 
-   **Tabela 3.6.** - Porównawczy wynik wszystkich testowanych algorytmów
+   **Tabela 3.6.** Porównawczy wynik wszystkich testowanych algorytmów
+
+======================= ================== ======== =========== ===========
+Algorytm                Parametry          Średnie  Odchylenie  TPR dla    
+                                           AUC      standardowe FPR ~ 0.03 
+                                                    AUC                    
+======================= ================== ======== =========== ===========
+Regresja logistyczna    C=3.5              0.99883  0.00058     0.99352    
+Naiwny klas. bayesowski alpha=0.1          0.99621  0.00105     0.98254   
+SVM (liniowy)           C=0.5              0.99677  0.00043     0.98734    
+SVM (RBF)               gamma=0.1, C=1.0   0.99679  0.00026     0.98839    
+Las drzew losowych      n_estimators=75    0.99774  0.00044     0.98892    
+======================= ================== ======== =========== ===========
 
 .. image:: charts/ROC_ALL.png
    :width: 85%
@@ -1048,10 +1048,7 @@ Las drzew losowych      n_estimators=100     0.99765          0.00049
 
 .. class:: caption
 
-   **Rysunek 3.7.** - Zbiór krzywych ROC poszczególnych algorytmów
-
-
-.. page::
+   **Rysunek 3.7.** Zbiór krzywych ROC poszczególnych algorytmów
 
 
 Integracja z programem pocztowym
@@ -1077,7 +1074,7 @@ otrzymuje wartość logiczną (prawda lub fałsz) mówiącą, czy wiadomość
 została uznana za spam.
 
 Serwer działa na porcie ``2220``. Oczekuje na wiadomości w formie
-surowej, wysłane z użyciem metody ``PUT`` [13]_ protokołu HTTP.
+surowej, wysłane z użyciem metody ``PUT`` [13] protokołu HTTP.
 Po otrzymaniu takiej wiadomości serwer podejmuje następujące
 działania:
 
@@ -1089,9 +1086,6 @@ działania:
 #. Jeśli algorytm uzna wiadomość za spam, serwer zwróci
    pustą odpowiedź z kodem HTTP ``221``, w przeciwnym wypadku
    zwróci pustą odpowiedź z kodem ``220``.
-
-.. [13] http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-   Sekcja 9.6.
 
 Wtyczka do klienta poczty
 -------------------------
@@ -1126,7 +1120,7 @@ Uruchomienie i efekt działania skryptu widoczne są na rysunkach 4.1 i 4.2.
 
 .. class:: caption
 
-   **Rysunek 4.1.** - Wywołanie skryptu sprawdzającego wiadomości e-mail
+   **Rysunek 4.1.** Wywołanie skryptu sprawdzającego wiadomości e-mail
 
 .. image:: images/plugin2_c.png
    :width: 85%
@@ -1134,10 +1128,7 @@ Uruchomienie i efekt działania skryptu widoczne są na rysunkach 4.1 i 4.2.
 
 .. class:: caption
 
-   **Rysunek 4.2.** - Efekt działania skryptu sprawdzającego wiadomości e-mail
-
-
-.. page::
+   **Rysunek 4.2.** Efekt działania skryptu sprawdzającego wiadomości e-mail
 
 
 Podsumowanie i możliwości rozbudowy
@@ -1146,14 +1137,17 @@ Podsumowanie i możliwości rozbudowy
 Efektem pracy jest kompletny system filtra antyspamowego. Udało się stworzyć
 filtr skutecznie wykrywający wiadomości spamowe. Filtr obserwuje
 takie cechy wiadomości jak użyte słowa, czy procentowe pokrycie tekstu
-tagami HTML. Najskuteczniejszym z testowanych algorytmów,
+tagami HTML. Wszystkie przetestowane algorytmy uczenia maszynowego udało
+się wytrenować z zadowalającymi rezultatami. Każdy z nich
+mógłby zostać wykorzystany w filtrze antyspamowym.
+Najskuteczniejszym z testowanych algorytmów,
 przy cechach wiadomości wybranych w tej pracy, okazała się
 regresja logistyczna.
 
 Oprócz samego klasyfikatora, stworzone zostały narzędzia wspomagające
 pracę filtra. Jednym z tych narzędzi jest parser surowych wiadomości
 e-mail. Potrafi on skutecznie przetwarzać wiadomości wieloczęściowe,
-korzystające z HTML, zakodowane różnymi kodowaniami, zapisane
+korzystające z HTML, wykorzystujące różne kodowania, zapisane
 w różnych stronach kodowych i zawierające załączniki.
 
 Innym narzędziem, pozwalającym na integrację z programami pocztowymi,
@@ -1164,7 +1158,7 @@ stworzona została prosta wtyczka do klienta poczty *Claws-Mail*.
 
 W przypadku dalszego rozwoju, warto rozważyć szukanie i tworzenie nowych
 cech wiadomości, a także przetestowanie innych algorytmów uczenia maszynowego.
-Godnym uwagi jest również zastosowanie stemmingu [14]_ do przetworzenie
+Godnym uwagi jest również zastosowanie stemmingu [14] do przetworzenia
 słów wiadomości do formy podstawowej. W przypadku rozbudowy parsera
 wiadomości, warto rozważyć implementacje skuteczniejszego parsowania
 treści HTML, a dokładniej użytych w nich arkuszy stylów CSS
@@ -1178,11 +1172,24 @@ W przypadku wykorzystania filtra w środowisku gdzie wiele wiadomości
 sprawdzanych byłoby jednocześnie, warto tą funkcję rozbudować.
 
 
-.. [14] http://en.wikipedia.org/wiki/Stemming
-
-
-.. page::
-
-
 Bibliografia
 ============
+
+1. Bolc L., Zaremba P., Wprowadzenie do uczenia się maszyn,
+   Akademicka Oficyna Wydawnicza, 1993
+2. http://scikit-learn.org/
+3. http://www.csie.ntu.edu.tw/~cjlin/liblinear/
+4. http://www.csie.ntu.edu.tw/~cjlin/libsvm/
+5. http://docs.python.org/2/library/htmlparser.html
+6. http://scikit-learn.org/stable/modules/feature_extraction.html
+7. http://www.claws-mail.org/
+8. http://spamassassin.apache.org/
+9. http://spamassassin.apache.org/publiccorpus/readme.html
+10. Manning, C. D.; Raghavan, P.; Schutze, H. (2008).
+    "Scoring, term weighting, and the vector space model"
+11. Trevor Hastie, Robert Tibshirani, Jerome Friedman,
+    The Elements of Statistical Learning, 2009
+12. http://en.wikipedia.org/wiki/Support_vector_machine
+13. http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+    Sekcja 9.6.
+14. http://en.wikipedia.org/wiki/Stemming

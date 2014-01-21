@@ -39,14 +39,13 @@ styles:
     caption:
         parent: bodytext
         alignment: left
+        spaceBefore: 15
         firstLineIndent: 0
         fontName: "FreeSerif-Oblique"
     code:
         keepWithNext: true
-    footnote:
-        fontSize: 30
 
-#linkColor: black
+linkColor: black
 
 pageSetup:
     firstTemplate: coverPage

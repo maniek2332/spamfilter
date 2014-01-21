@@ -1,6 +1,6 @@
 STYLE=-s pk_inz
 EXTENSIONS=-e preprocess -e dotted_toc
-OPTS=--font-path=fonts
+OPTS=-b 1 --font-path=fonts
 
 # requires: docutils
 pdf: paper.rst
