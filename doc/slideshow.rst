@@ -5,17 +5,14 @@ Implementacja filtra antyspamowego przy użyciu uczenia maszynowego
 :Autor: Mariusz Okulanis
 :Promotor: dr inż. Michał Bereta
 
-
-.. include:: <s5defs.txt>
-
 Wstęp
 =====
 
 Założeniem pracy jest stworzenie filtra antyspamowego,
-który będzie klasyfikował spam korzystając z
-uczenia maszynowego oraz
-który będzie mógł zostać wykorzystany w istniejących
-programach pocztowych.
+który klasyfikuje spam korzystając z
+uczenia maszynowego. Ponadto filtr ten będzie posiadał
+interfejs, który pozwoli na integracje z istniejącymi
+programami pocztowymi.
 
 Cel i zakres pracy
 ==================
@@ -35,12 +32,10 @@ Polega na tworzeniu automatycznych
 systemów potrafiących się doskonalić przy pomocy zdobytego
 doświadczenia i nabywania w ten sposób nowej wiedzy.
 
-.. container:: incremental
+Przykładowe zastosowania:
 
-    Przykładowe zastosowania:
-
-    * rozpoznawanie mowy
-    * automatyczne sterowanie samochodem
+* rozpoznawanie mowy
+* automatyczne sterowanie samochodem
 
 Przetwarzanie wiadomości
 ========================
@@ -56,8 +51,7 @@ Ważne cechy wiadomości
 
 * Częstość wystąpień słów
 
-.. code::
-   :class: incremental
+.. code:: txt
 
     receive     0.676
     please      1.018
@@ -73,13 +67,7 @@ Ważne cechy wiadomości
 ======================
 
 * Częstość wystąpień słów
-
-.. class:: incremental
-
-* Wystąpenia linków w treści e-maila
-
-.. class:: incremental
-
+* Wystąpienia linków w treści e-maila
 * Pokrycie tekstu pogrubieniami i kolorami
 
 Algorytmy uczenia maszynowego
@@ -88,47 +76,36 @@ Algorytmy uczenia maszynowego
 Wybrane algorytmy:
 
 * Regresja logistyczna
-* Maszyna wektorów nośnych (SVM)
 * Naiwny klasyfikator bayesowski
+* Maszyna wektorów nośnych (SVM)
 * Las drzew losowych
 
-Regresja logistyczna
-====================
+Porówanie efektywności algorytmów
+=================================
 
-.. figure:: charts/ROC_LogisticRegression.png
-   :align: center
+======================= ========= =========== ===========
+Algorytm                Średnie   Odchylenie  TPR dla    
+                        AUC       standardowe FPR ~ 0.03 
+                                  AUC                    
+======================= ========= =========== ===========
+Regresja logistyczna    0.99883   0.00058     0.99352    
+Naiwny klas. bayesowski 0.99621   0.00105     0.98254   
+SVM (liniowy)           0.99677   0.00043     0.98734    
+SVM (RBF)               0.99679   0.00026     0.98839    
+Las drzew losowych      0.99774   0.00044     0.98892    
+======================= ========= =========== ===========
 
-   Krzywa ROC, Celność: 97,4%
+Porówanie efektywności algorytmów
+=================================
 
-Maszyna wektorów nośnych (SVM)
-==============================
+.. image:: charts/ROC_ALL_part1.png
+   :width: 65%
 
-.. figure:: charts/ROC_SVC.png
-   :align: center
+Porówanie efektywności algorytmów
+=================================
 
-   Krzywa ROC, Celność: 84,8%
-
-Naiwny klasyfikator bayesowski
-==============================
-
-.. figure:: charts/ROC_MultinomialNB.png
-   :align: center
-
-   Krzywa ROC, Celność: 96,2%
-
-Las drzew losowych
-==================
-
-.. figure:: charts/ROC_RandomForestClassifier.png
-   :align: center
-
-   Krzywa ROC, Celność: 96,0%
-
-Porówanie
-=========
-
-.. image:: charts/ROC_ALL.png
-   :align: center
+.. image:: charts/ROC_ALL_part2.png
+   :width: 65%
 
 Integracja z klientem poczty
 ============================
@@ -153,25 +130,29 @@ Integracja z klientem poczty
    :width: 80%
    :align: center
 
-Wykorzystane technologie
-========================
+..
+    Wykorzystane technologie
+    ========================
 
-* Python
-* Scipy
-* Pandas
-* Matplotlib
+    + Python
+    + Scipy
+    + Pandas
+    + Matplotlib
 
-|python| |matplotlib| |scipy| |pandas|
+    |python| |matplotlib| |scipy| |pandas|
 
-.. |matplotlib| image:: logos/matplotlib.png
-.. |scipy| image:: logos/scipy.png
-.. |pandas| image:: logos/pandas.png
-.. |python| image:: logos/python.png
-   :scale: 50%
+   .. |matplotlib| image:: logos/matplotlib.png
+      :scale: 30%
+   .. |scipy| image:: logos/scipy.png
+      :scale: 30%
+   .. |pandas| image:: logos/pandas.png
+      :scale: 30%
+   .. |python| image:: logos/python.png
+      :scale: 30%
 
 Koniec
 ======
 
 .. class:: center huge
 
-Dziękuję za uwage
+Dziękuję za uwagę
