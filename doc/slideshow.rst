@@ -51,17 +51,18 @@ Ważne cechy wiadomości
 
 * Częstość wystąpień słów
 
-.. code:: txt
-
-    receive     0.676
-    please      1.018
-    we          1.864
-    money       1.112
-    will        1.784
-    free        1.498
-    our         1.662
-    your        4.002
-    you         7.396
+======= ========= ========
+Słowo   Spam      Nie-spam
+======= ========= ========
+you      7.469347 2.184469
+your     4.638102 0.883071
+our      1.876071 0.415055
+we       2.082399 0.783100
+free     1.482531 0.287414
+will     1.858932 0.713776
+click    1.052076 0.119012
+please   1.021753 0.173758
+======= ========= ========
 
 Ważne cechy wiadomości
 ======================
@@ -153,6 +154,6 @@ Integracja z klientem poczty
 Koniec
 ======
 
-.. class:: center huge
+.. class:: center
 
 Dziękuję za uwagę
