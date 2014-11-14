@@ -1,0 +1,7 @@
+This project was a part of Engineer's Thesis.
+
+The idea was to create simple, machine learning based, spam filter.
+Scikit-learn was used for machine-learning algorithms and related functions.
+SpamAssasin's database was used for training and testing the system.
+Detailed description of this spam filter is in file:
+doc/paper.pdf (written in Polish).
